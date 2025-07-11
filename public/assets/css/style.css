@@ -1,0 +1,165 @@
+/* CSS kustom untuk styling kartu */
+    .status-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px; /* Sudut membulat */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bayangan lembut */
+        overflow: hidden; /* Pastikan konten tidak meluber */
+        width: 75%; /* Lebar penuh dalam kolomnya */
+        max-width: 250px; /* Batasi lebar maksimal kartu jika di layout flex/grid */
+        max-height: 250px;
+        margin: auto; /* Untuk menengahkan kartu jika max-width diterapkan */
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column; /* Konten disusun kolom */
+        justify-content: space-between;
+    }
+
+    .card-header-custom {
+        padding: 2px 5px;
+        font-weight: 400;
+        color: #555;
+        font-size: 0.8em;
+        flex-shrink: 0;
+    }
+
+    .card-role-custom {
+        background-color: #e9ecef; /* Warna latar belakang header */
+        padding: 5px 10px;
+        font-weight: 600;
+        color: #050505;
+        border-bottom: 1px solid #eee;
+        font-size: 0.95em; /* Kecilkan ukuran font header */
+        flex-shrink: 0;
+    }
+
+    .card-body-custom {
+        padding: 5px 10px; /* Kurangi padding */
+        flex-grow: 1; /* Biarkan body mengambil sisa ruang */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Tengahkan konten vertikal di body */
+        align-items: center; /* Tengahkan konten horizontal di body */
+    }
+
+    .order-status-number {
+        font-size: 1.5em; /* Ukuran font besar untuk angka */
+        font-weight: 700;
+        color: #333;
+        line-height: 1.2;
+        margin-bottom: 3px; /* Jarak antara angka dan status teks */
+    }
+
+    .order-status-text {
+        font-size: 0.8em; /* Ukuran font untuk status (Closed) */
+        font-weight: 600;
+        color: #6c757d; /* Warna abu-abu untuk status */
+        margin-bottom: 1px; /* Jarak antara status teks dan tombol */
+    }
+
+    .more-info-link {
+        display: block;
+        padding: 5px 10px; /* Kurangi padding */
+        background-color: #e9ecef;
+        color: #007bff;
+        text-decoration: none;
+        font-size: 0.75em; /* Kecilkan ukuran font link */
+        font-weight: 500;
+        border-top: 1px solid #dee2e6;
+        transition: background-color 0.2s ease;
+        flex-shrink: 0; /* Pastikan link tidak menyusut */
+    }
+
+    .more-info-link:hover {
+        background-color: #dee2e6;
+        text-decoration: none;
+    }
+
+    /* Responsiveness sederhana untuk kolom */
+    @media (max-width: 576px) {
+        .status-card {
+            max-width: 50%; /* Kartu mengambil lebar penuh kolomnya (col-12) */
+            /* Anda bisa menambahkan padding horizontal pada .col-12 jika ingin ada jarak dari sisi layar */
+            max-height: 200px; /* Batasi tinggi maksimal kartu */
+        }
+        /* Di sini, ukuran font dan padding sudah cukup kecil dari @media 768px,
+        namun Anda bisa menyesuaikannya lagi jika perlu sangat kecil. */
+        .order-status-number {
+            font-size: 0.8em; /* Bisa lebih kecil lagi jika perlu */
+        }
+        .order-status-text {
+            font-size: 0.5em;
+        }
+
+        .card-header-custom {
+            font-size: 0.6em; /* Kecilkan ukuran font header */
+        }
+        .card-body-custom {
+            padding: 3px 5px; /* Kurangi padding */
+        }
+        .more-info-link {
+            padding: 3px 5px; /* Kurangi padding */
+            font-size: 0.6em; /* Kecilkan ukuran font link */
+        }
+    }
+
+    .body {
+        background-color: #f8f9fa;
+    }
+
+    .navbar-brand {
+        font-weight: bold;
+    }
+
+    .status-icon {
+        font-size: 1.5em; /* Sesuaikan ukuran ikon */
+        display: inline-flex; /* Untuk senter vertikal dan horizontal */
+        align-items: center;
+        justify-content: center;
+        width: 1.5em; /* Membuat area ikon berbentuk kotak agar mudah dikontrol */
+        height: 1.5em;
+        border-radius: 50%; /* Membuat ikon terlihat dalam lingkaran */
+        /* background-color: #f0f0f0; <-- Opsional: latar belakang lingkaran */
+    }
+
+    .status-icon.check {
+        color: #28a745; /* Hijau untuk ceklis */
+        /* border: 1px solid #28a745; <-- Opsional: border warna */
+    }
+
+    .status-icon.cross {
+        color: #dc3545; /* Merah untuk silang */
+        /* border: 1px solid #dc3545; <-- Opsional: border warna */
+    }
+
+    .status-icon.empty {
+        color: #6c757d; /* Abu-abu netral untuk kosong */
+        /* border: 1px solid #6c757d; <-- Opsional: border warna */
+    }
+
+    /* Styling untuk ikon kosong jika Anda ingin yang lebih tipis/garis */
+    .status-icon.empty .fa-circle {
+        font-size: 0.8em; /* Kecilkan lingkaran agar terlihat lebih "kosong" di tengah */
+        border: 2px solid; /* Tambahkan border untuk menciptakan efek cincin */
+        border-radius: 50%;
+        color: transparent; /* Transparan agar hanya border yang terlihat */
+        background-color: transparent;
+    }
+
+    .table-responsive-scroll {
+        max-height: 300px; /* Atur tinggi maksimum yang Anda inginkan */
+        overflow-y: auto;  /* Aktifkan scroll vertikal jika konten melebihi max-height */
+        border: 1px solid #dee2e6; /* Opsional: tambahkan border untuk visualisasi area scroll */
+        border-radius: .25rem; /* Opsional: sesuaikan dengan border-radius tabel Bootstrap */
+    }
+
+    .table-responsive-scroll table thead th,
+
+    .table-responsive-scroll table tbody tr th { /* Tambahkan ini jika Anda punya thead>th di tbody */
+        position: sticky;
+        top: 0;
+        background-color: #f8f9fa; /* Warna latar belakang header agar tidak transparan */
+        z-index: 10; /* Pastikan header di atas konten yang di-scroll */
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); /* Opsional: bayangan di bawah header */
+    }
+
