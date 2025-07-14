@@ -53,13 +53,12 @@
 </head>
 <body>
   <div class="login-container">
-    <h2>Login</h2>
+    <h2>Login Sistem</h2>
     <form action="{{ route('login') }}" method="POST">
     @csrf
-      <label for="username">Username</label>
-      <input type="text" id="username" name="username" required />
+      <input type="text" id="username" name="username" placeholder="ID Card" />
 
-    <button type="submit" class="btn btn-primary w-100">
+    <button type="submit" class="btn btn-primary">
         Login
     </button>
     </form>

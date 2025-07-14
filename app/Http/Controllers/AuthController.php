@@ -25,18 +25,22 @@ class AuthController extends Controller
 
         if ($user) {
             Auth::login($user);
-            return redirect()->route('dashboard');
+            return response()
+                ->json([
+                    'success' => true,
+                    'message' => 'Login Berhasil',
+                ], 200);
         }
 
-        return back()->with('error', 'Username tidak terdaftar!');
+        return response()
+            ->json([
+                'success' => false,
+                'message' => 'ID Card tidak terdaftar',
+        ], 200);
     }
 
     public function destroy(Request $request)
     {
-        // Hapus session
-        if ($request->session()->has('customer')) {
-            $request->session()->forget(['customer', 'plan', 'cycle']);
-        }
         Auth::logout();
         return redirect()->route('index');
     }

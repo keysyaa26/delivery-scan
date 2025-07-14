@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExternalController;
 use App\Http\Controllers\ManifestScanController;
 use App\Http\Controllers\ScanController;
+use App\Http\Controllers\ScanWaitingPostController;
 use App\Http\Controllers\SessionQrController;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\Route;
@@ -42,3 +43,11 @@ Route::get('/input-customer-cycle', [ExternalController::class, 'DeliveryHpm'])
 
 
 Route::get('/session/qr', [SessionQrController::class, 'generateQrCode'])->name('session.qr');
+
+
+Route::controller(ScanWaitingPostController::class)->group(function () {
+    Route::get('/scan-waiting-post', 'scanWaitingPost')->name('open');
+    Route::get('/wp/index', 'index')->name('store');
+});
+
+?>
