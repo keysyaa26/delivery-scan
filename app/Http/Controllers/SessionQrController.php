@@ -9,11 +9,10 @@ class SessionQrController extends Controller
 {
      public function generateQrCode()
      {
-         $data = [
-            'customer' => session('customer'),
-            'plan' => session('plan'),
-            'cycle' => session('cycle'),
-         ];
+        $data = [
+            'customer' => 'hpm',
+            'cycle' => '3'
+        ];
          $qrText = json_encode($data);
 
          return view('QrMake', compact('qrText'));

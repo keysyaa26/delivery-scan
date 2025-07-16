@@ -8,7 +8,7 @@ class MmkiCustomer extends BaseCustomer
 {
     public function getTableName(): string
     {
-        return 'tbl_deliverymmki';
+        return 'tbl_deliverynote';
     }
 
     public function getLogChannel(): string

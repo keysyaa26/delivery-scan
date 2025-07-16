@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('check_manifest', function (Blueprint $table) {
+        Schema::create('tb_input_log', function (Blueprint $table) {
             $table->id();
-            $table->string('input_manifest')->nullable();
+            $table->string('customer_tbl')->nullable();
+            $table->string('no_dn')->nullable();
+            $table->enum('process', ['check_po', 'check_kelengkapan'])->nullable();
             $table->enum('status', ['OK', 'NG'])->default(NULL);
-            $table->unsignedBigInteger('manifest_id')->nullable();
-            $table->string('manifest_type')->nullable();
+            $table->foreignId('scanned_by')->nullable()->constrained('tbl_user');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('check_manifest');
+        Schema::dropIfExists('tb_input_log');
     }
 };

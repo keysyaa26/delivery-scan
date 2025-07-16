@@ -87,7 +87,7 @@
                         alertDiv.classList.remove('d-none'); // Tampilkan alert
                     });
             } catch (error) {
-                console.error('QR tidak valid (bukan JSON):', error);
+                console.error('Tidak Valid (bukan JSON):', error);
                 alert('QR Code tidak sesuai format!');
             }
         }

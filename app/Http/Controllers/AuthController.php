@@ -25,11 +25,7 @@ class AuthController extends Controller
 
         if ($user) {
             Auth::login($user);
-            return response()
-                ->json([
-                    'success' => true,
-                    'message' => 'Login Berhasil',
-                ], 200);
+            return redirect()->route('dashboard');
         }
 
         return response()
@@ -42,6 +38,6 @@ class AuthController extends Controller
     public function destroy(Request $request)
     {
         Auth::logout();
-        return redirect()->route('index');
+        return redirect()->route('/');
     }
 }
