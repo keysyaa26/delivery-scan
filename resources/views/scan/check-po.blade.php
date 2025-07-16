@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barcode Manifest Scanner</title>
+    <title>Scan Barcode Manifest</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
@@ -13,7 +13,7 @@
     <!-- Scanner Container -->
     <div id="reader-container" style="position: relative; width: 300px; height: 300px; margin: auto;">
         <!-- Kotak Hijau -->
-        <div class="custom-barcode-frame"></div>
+        <div class="custom-qr-frame"></div>
         <!-- Tempat Kamera -->
         <div id="reader" style="width: 100%; height: 100%;"></div>
     </div>
@@ -21,36 +21,30 @@
     <!-- Info dan Tombol -->
     <div class="scanner-info" style="text-align: center; margin-top: 10px;">
         <div class="info-text">Arahkan kamera ke Barcode Manifest</div>
-        <a href="{{ route('wp.index') }}" class="btn btn-danger">Kembali</a>
+        <div class="button-group-bottom mt-3">
+            <a href="{{ route('wp.index') }}" class="btn btn-danger">Kembali</a>
+            <a href="{{ route('wp.index') }}" class="btn btn-primary">Selanjutnya</a>
+        </div>
     </div>
 
     <!-- Form untuk mengirim hasil -->
-    <form action="{{ route('po.store-scan') }}" method="POST" id="barcodeForm">
+    <form action="{{ route('po.store-scan') }}" method="POST" id="qrForm">
         @csrf
-        <input type="hidden" name="barcode_result" id="barcodeResult">
+        <input type="hidden" name="qr_result" id="qrResult">
     </form>
-
 
 
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    const barcodeForm = document.getElementById("barcodeForm");
-    const barcodeResult = document.getElementById("barcodeResult");
 
     function onScanSuccess(decodedText, decodedResult) {
-        html5barcodecodeScanner.clear().then(() => {
-            console.log("Scanner stopped.");
-        }).catch(error => {
-            console.error("Error stopping scanner:", error);
-        });
-
-        // Masukkan hasil ke input form
-        barcodeResult.value = decodedText;
-
+        const data = JSON.parse(decodedText);
         const csrfToken = document.querySelector('input[name="_token"]').value;
 
-        fetch(barcodeForm.action, {
+        console.log(data);
+
+        fetch('/po/store-scan', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -58,7 +52,7 @@
                 "Accept": "application/json"
             },
             body: JSON.stringify({
-                barcode_result: decodedText
+                barcode_result: data
             })
         })
         .then(response => response.json())
@@ -78,13 +72,13 @@
                 title: 'Error',
                 text: 'Gagal mengirim data.'
             });
+
         });
     }
 
     function onScanFailure(error) {
             console.warn(`Scan error: ${error}`);
     }
-
     const html5QrCode = new Html5Qrcode("reader");
     Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {

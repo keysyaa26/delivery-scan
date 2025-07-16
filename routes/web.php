@@ -48,12 +48,14 @@ Route::controller(ScanWaitingPostController::class)->name('wp.')->group(function
 
 Route::controller(PoCheckController::class)->name('po.')->group(function () {
     Route::get('/po/open-scan', 'openScan')->name('open-scan');
-    Route::post('/po/store-scan', 'storeScan')->name('store-scan');
+    Route::post('/po/store-scan', 'processScan')->name('store-scan');
 });
 
 // QR maker untuk simulasi
 Route::controller(SessionQrController::class)->name('session-qr.')->group(function () {
     Route::get('/session-qr', 'generateQrCode')->name('index');
+    Route::get('/session-barcode', 'generateBarCode')->name('barcode');
+    Route::get('/session-tes', 'tes')->name('tes');
 });
 
 ?>

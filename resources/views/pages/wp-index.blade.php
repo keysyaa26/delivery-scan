@@ -34,7 +34,9 @@
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
+                        <th>Tanggal Order</th>
                         <th>Manifest</th>
+                        <th>Job No</th>
                         <th>Cycle</th>
                         <th>Status</th>
                     </tr>
@@ -44,7 +46,9 @@
                     @foreach ($manifests as $manifest )
                     <tr>
                         <td>{{ $i++ }}</td>
+                        <td>{{ $manifest->tanggal_order }}</td>
                         <td>{{ $manifest->dn_no }}</td>
+                        <td>{{ $manifest->job_no }}</td>
                         <td>{{ $manifest->cycle }}</td> {{-- FIX: Added closing </td> here --}}
                         <td>
                             @if ($manifest->status === null)
