@@ -98,34 +98,17 @@
 
 
     <!-- SweetAlert -->
-    @if(session('alert'))
+    @if(session('success') || session('error'))
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            @php
-                $alertType = session('success') ? 'success' : (session('error') ? 'error' : 'warning');
-                $alertMessage = session('success') ?? session('error') ?? session('warning') ?? '';
-            @endphp
-            let alertType = "{{ $alertType }}";
-            let alertMessage = "{{ $alertMessage }}";
-            let title = "";
-            if (alertType === 'success') {
-                title = 'Sukses!';
-            } else if (alertType === 'error') {
-                title = 'Error!';
-            } else if (alertType === 'warning') {
-                title = 'Peringatan!';
-            }
-
-            Swal.fire({
-                title: "",
-                text: '{{ session('alert.message') }}',
-                background: 'rgba(0, 0, 0, 0.8)',
-                color: 'white',
-                timer: 3000,
-                showConfirmButton: false
-            });
+        document.addEventListener("DOMContentLoaded", function () {
+        Swal.fire({
+            icon: '{{ session('success') ? 'success' : 'error' }}',
+            title: '{{ session('success') ? 'Berhasil!' : 'Gagal!' }}',
+            text: '{{ session('success') ?? session('error') }}',
+            timer: 3000,
+            showConfirmButton: false
         });
+    });
     </script>
     @endif
 </body>

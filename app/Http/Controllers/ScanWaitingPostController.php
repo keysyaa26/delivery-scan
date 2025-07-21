@@ -7,29 +7,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
-class ScanWaitingPostController extends Controller
+class ScanWaitingPostController extends BaseController
 {
     use \Illuminate\Foundation\Validation\ValidatesRequests;
-    public function index(Request $request)
-    {
 
-        // ambil data manifest untuk tabel
-        $customer = strtolower(session('customer'));
-        $cycle = session('cycle');
-
-        $manifestCustomer = CustomerFactory::createCustomerInstance($customer);
-        $dataManifest =$manifestCustomer->checkManifestCustomer($cycle); //bentuk collection (hrs loop)
-
-        if ($request->query('date')) {
-            $date = $request->query('date');
-            $dataManifest = $dataManifest->filter(function ($item) use ($date) {
-                return Carbon::parse($item->tanggal_order)->toDateString() === $date;
-            });
+    public function index () {
+        $manifests = null;
+        if(session('customer')) {
+            $manifests = $this->dataIndex();
         }
-
-        $manifests = $manifestCustomer->getAllWithStatus($dataManifest); //ada status dari tb_log
-
-        return view('pages.wp-index', compact( 'customer', 'cycle', 'manifests'));
+        return view('pages.wp-index', compact('manifests'));
     }
 
     public function openScanWaitingPost (Request $request) {
@@ -42,16 +29,21 @@ class ScanWaitingPostController extends Controller
             'cycle' => 'required',
         ]);
 
+        $date = $request->input('date');
+
         try {
             session([
                 'customer' => $request->input('customer'),
                 'cycle' => $request->input('cycle'),
             ]);
 
+            $manifests = $this->dataIndex($date);
+
             return response()
                 ->json([
                     'success' => true,
                     'message' => 'Scan berhasil!',
+                    'manifests' => $manifests
                 ], 200);
         } catch (\Throwable $e) {
             Log::error('QR Scan Error: '.$e->getMessage());
@@ -62,5 +54,9 @@ class ScanWaitingPostController extends Controller
                     'message' => 'Terjadi kesalahan di server: ' . $e->getMessage(),
                 ], 500);
         }
+    }
+
+    public function tes(Request $request) {
+        dd(session('customer'));
     }
 }

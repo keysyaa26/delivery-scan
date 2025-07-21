@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Database\Factories\CustomerFactory;
+use Carbon\Carbon;
 
 abstract class BaseController extends Controller
 {
@@ -32,4 +33,24 @@ abstract class BaseController extends Controller
         $customer = CustomerFactory::createCustomerInstance($customer);
         return $customer->checkManifestCustomer($cycle);
     }
+
+        public function dataIndex($date = null)
+        {
+            // ambil data manifest untuk tabel
+            $customer = strtolower(session('customer'));
+            $cycle = session('cycle');
+
+            $manifestCustomer = CustomerFactory::createCustomerInstance($customer);
+            $dataManifest =$manifestCustomer->checkManifestCustomer($cycle); //bentuk collection (hrs loop)
+
+            if ($date) {
+                $dataManifest = $dataManifest->filter(function ($item) use ($date) {
+                    return Carbon::parse($item->tanggal_order)->toDateString() === $date;
+                });
+            }
+
+            $manifests = $manifestCustomer->getAllWithStatus($dataManifest); //ada status dari tb_log
+
+            return $manifests;
+        }
 }

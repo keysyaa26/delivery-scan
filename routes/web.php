@@ -21,29 +21,12 @@ Route::controller(DashboardController::class)->group(function () {
     Route::get('/dashboard', 'index')->name('dashboard');
 });
 
-Route::controller(ScanController::class)->name('scan.')->group(function () {
-    Route::post('/store-scan', 'storeScanCustomer')->name('store-data');
-    Route::get('/open-scan', 'openScan')->name('open');
-    Route::post('/close-scan', 'endSessionCustomer')->name('end-session');
-});
-
-Route::controller(ManifestScanController::class)->name('manifest.')->group(function () {
-    Route::get('/scan-manifest', 'filterManifest')->name('filter');
-    Route::post('/store-manifest', 'storeManifest')->name('store');
-    Route::get('/input-manifest', 'openScanManifest')->name('open');
-    Route::get('/checked-manifest', 'checkedManifestIndex')->name('checked.index');
-    // Route::get('/debug-manifest', 'debug')->name('debug');
-});
-
-Route::get('/scan-customer', function () {
-    return view('scan-customer');
-})->name('scan.customer');
-
 
 Route::controller(ScanWaitingPostController::class)->name('wp.')->group(function () {
     Route::get('/wp/open-scan', 'openScanWaitingPost')->name('open-scan');
     Route::post('/wp/store-scan', 'storeScan')->name('store-scan');
     Route::get('/wp/index', 'index')->name('index');
+    Route::get('/wp/tes', 'tes')->name('tes');
 });
 
 Route::controller(PoCheckController::class)->name('po.')->group(function () {
@@ -58,4 +41,10 @@ Route::controller(SessionQrController::class)->name('session-qr.')->group(functi
     Route::get('/session-tes', 'tes')->name('tes');
 });
 
+
+Route::controller(ScanController::class)->name('scan.')->group(function () {
+    Route::post('/store-scan', 'storeScanCustomer')->name('store-data');
+    Route::get('/open-scan', 'openScan')->name('open');
+    Route::post('/close-scan', 'endSessionCustomer')->name('end-session');
+});
 ?>
