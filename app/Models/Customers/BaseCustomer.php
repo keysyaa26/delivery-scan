@@ -20,6 +20,7 @@ abstract class BaseCustomer extends Model
     public function checkManifestCustomer($cycle){
         $datas = DB::table($this->getTableName())
                 ->where('cycle', $cycle)
+                ->orderBy('tanggal_order', 'asc')
                 ->get();
 
         return $datas;
