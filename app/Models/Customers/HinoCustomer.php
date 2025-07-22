@@ -21,4 +21,9 @@ class HinoCustomer extends BaseCustomer
         {
             return 'masterpart_hino';
         }
+
+    public function getViewTable(): string
+    {
+        return 'vw_data_hino';
+    }
 }

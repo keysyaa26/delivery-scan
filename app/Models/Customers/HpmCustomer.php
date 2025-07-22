@@ -19,4 +19,9 @@ class HpmCustomer extends BaseCustomer
     {
         return 'masterpart_hpm';
     }
+
+    public function getViewTable(): string
+    {
+        return 'vw_data_hpm';
+    }
 }

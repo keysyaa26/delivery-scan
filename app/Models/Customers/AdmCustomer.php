@@ -30,4 +30,9 @@ class AdmCustomer extends BaseCustomer
     {
         return 'masterpart_adm';
     }
+
+    public function getViewTable(): string
+    {
+        return 'vw_data_adm';
+    }
 }

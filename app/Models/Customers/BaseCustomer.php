@@ -13,8 +13,8 @@ abstract class BaseCustomer extends Model
     protected $logChannel;
     abstract public function getTableName(): string;
     abstract protected function getLogChannel(): string;
-
     abstract public function getTableMasterparts(): string;
+    abstract public function getViewTable(): string;
 
     // ambil data manifest pada cycle yg ditentukan
     public function checkManifestCustomer($cycle){
