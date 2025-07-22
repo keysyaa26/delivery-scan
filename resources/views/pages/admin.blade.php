@@ -153,7 +153,16 @@
             });
 
             function refreshTabel() {
-                fetch("{{ route('wp.index') }}", {
+                const dateInput = document.getElementById('dateInput');
+                const selectedDate = dateInput ? dateInput.value : '';
+
+                const baseUrl = "{{ route('wp.index') }}";
+                const url = new URL(baseUrl, window.location.origin);
+
+                if (selectedDate) { // Hanya tambahkan parameter jika tanggal dipilih
+                    url.searchParams.append('date', selectedDate);
+                }
+                fetch(url.toString(), {
                     method: "GET",
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'  // <== ini WAJIB
