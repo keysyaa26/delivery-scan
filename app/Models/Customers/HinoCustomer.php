@@ -16,4 +16,9 @@ class HinoCustomer extends BaseCustomer
     {
         return 'hino_log';
     }
+
+    public function getTableMasterparts(): string
+        {
+            return 'masterpart_hino';
+        }
 }

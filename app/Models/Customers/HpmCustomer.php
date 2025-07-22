@@ -14,4 +14,9 @@ class HpmCustomer extends BaseCustomer
     {
         return 'hpm_log';
     }
+
+    public function getTableMasterparts(): string
+    {
+        return 'masterpart_hpm';
+    }
 }

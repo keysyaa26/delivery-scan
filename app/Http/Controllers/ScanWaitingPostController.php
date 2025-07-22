@@ -6,6 +6,7 @@ use Database\Factories\CustomerFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ScanWaitingPostController extends BaseController
 {
@@ -13,14 +14,21 @@ class ScanWaitingPostController extends BaseController
 
     public function index () {
         $manifests = null;
+
         if(session('customer')) {
             $manifests = $this->dataIndex();
         }
-        return view('pages.wp-index', compact('manifests'));
-    }
 
-    public function openScanWaitingPost (Request $request) {
-        return view('scan.waiting-post');
+        if (request()->ajax()) {
+            logger()->debug('Ajax request received');
+            return view('partials.table-manifest', ['manifests' => $manifests, 'counter' => 1])->render();
+        }
+
+        $user = Auth::user();
+        if (in_array($user->id_role, [1, 2])) {
+            return view('pages.leader', compact('manifests'));
+        }
+        return view('pages.admin', compact('manifests'));
     }
 
     public function storeScan(Request $request) {
@@ -43,7 +51,6 @@ class ScanWaitingPostController extends BaseController
                 ->json([
                     'success' => true,
                     'message' => 'Scan berhasil!',
-                    'manifests' => $manifests
                 ], 200);
         } catch (\Throwable $e) {
             Log::error('QR Scan Error: '.$e->getMessage());
@@ -56,7 +63,5 @@ class ScanWaitingPostController extends BaseController
         }
     }
 
-    public function tes(Request $request) {
-        dd(session('customer'));
-    }
+
 }

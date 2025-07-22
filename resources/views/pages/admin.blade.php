@@ -1,6 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => 'Admin'])
 
 @section('content')
+
+@php
+    use Illuminate\Support\Facades\Auth;
+@endphp
+
 <div class="container mt-4">
 <div class="card">
     <div class="card-body">
@@ -24,57 +29,13 @@
             </div>
         </form>
 
-        @if(!empty($manifests))
-        <form method="POST" id="formManifest">
-            @csrf
-            <div class="mb-3">
-                <label for="inputManifest" class="form-label">Manifest</label>
-                <input type="text" name="manifest" id="inputManifest" class="form-control" value="{{old('manifest')}}" placeholder="Scan Manifest..." autofocus>
-            </div>
-        </form>
+        <div id="form2-container" style="display:none;">
+            @include('partials.input-manifest')
 
-        <h4 class="mb-4">Data Manifest</h4>
-            <div class="table-responsive-scroll">
-                <table class="table table-bordered table-striped mt-2 table-hover table-sm text-center">
-                    <thead class="table-light">
-                        <tr>
-                            <th>No</th>
-                            <th>Tanggal Order</th>
-                            <th>Manifest</th>
-                            <th>Job No</th>
-                            <th>Cycle</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $i = 1;
-                        @endphp
-                        @foreach ($manifests as $manifest )
-                        <tr>
-                            <td>{{ $i++ }}</td>
-                            <td>{{ $manifest->tanggal_order }}</td>
-                            <td>{{ $manifest->dn_no }}</td>
-                            <td>{{ $manifest->job_no }}</td>
-                            <td>{{ $manifest->cycle }}</td> {{-- FIX: Added closing </td> here --}}
-                            <td>
-                                @if ($manifest->status === null)
-                                    {{-- Jika status null, tampilkan kosong --}}
-                                @elseif ($manifest->status === 'OK')
-                                    <b style="color: green;">OK</b>
-                                @elseif ($manifest->status === 'NG')
-                                    <b style="color: red;">NG</b>
-                                @else
-                                    {{ $item->status }} {{-- Tampilkan status apa adanya jika bukan null, OK, atau NG --}}
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div id='table-manifest'>
+                @include('partials.table-manifest')
             </div>
-        @endif
-
+        </div>
 
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -108,7 +69,7 @@
 
                     console.time("scannerPost");
                     try {
-                        const response = await fetch('/wp/store-scan', {
+                        const response = await fetch('/waiting-post/store-scan', {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -131,6 +92,10 @@
                             timer: 2000,
                             showConfirmButton: false
                         });
+
+                        document.getElementById('form2-container').style.display = 'block';
+
+                        refreshTabel();
                     } catch (error) {
                         console.error("Error:", error);
                         Swal.fire({
@@ -146,8 +111,6 @@
                 }
             }
 
-
-
             document.getElementById('inputManifest').addEventListener('keydown', async function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -158,7 +121,7 @@
 
                 console.log('Script loaded!');
 
-                fetch('/po/store-scan', {
+                fetch('/manifest/store-scan', {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -178,13 +141,28 @@
                             icon: data.success ? 'success' : 'error',
                             timer: 2000,
                             showConfirmButton: false
-                        });
+                            });
+
+                            refreshTabel();
                     })
                     .catch(error => {
                         console.error("Error:", error);
                     });
                 }
             });
+
+            function refreshTabel() {
+                fetch("{{ route('wp.index') }}", {
+                    method: "GET",
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'  // <== ini WAJIB
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('table-manifest').innerHTML = html;
+                    });
+            }
         </script>
     </div>
 </div>

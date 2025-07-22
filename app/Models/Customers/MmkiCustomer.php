@@ -15,4 +15,9 @@ class MmkiCustomer extends BaseCustomer
     {
         return 'mmki_log';
     }
+
+    public function getTableMasterparts(): string
+    {
+        return 'masterpart_mmki';
+    }
 }

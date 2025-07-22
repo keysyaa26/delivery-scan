@@ -14,6 +14,8 @@ abstract class BaseCustomer extends Model
     abstract public function getTableName(): string;
     abstract protected function getLogChannel(): string;
 
+    abstract public function getTableMasterparts(): string;
+
     // ambil data manifest pada cycle yg ditentukan
     public function checkManifestCustomer($cycle){
         $datas = DB::table($this->getTableName())
@@ -77,8 +79,8 @@ abstract class BaseCustomer extends Model
         }
 
         $fileNumbers = $filteredData->pluck('dn_no')->unique()->filter()->values();
-        // ambil status terakhir untuk setiap manifest
 
+        // ambil status terakhir untuk setiap manifest
         if ($fileNumbers->isEmpty()) {
             return $filteredData->map(function ($item) {
                 $item->status = null;
@@ -101,5 +103,14 @@ abstract class BaseCustomer extends Model
             $customer->status = $statuses[$customer->dn_no] ?? null;
             return $customer;
         });
+    }
+
+    // ambil data manifest yg OK
+    public function getOkManifest ($filteredData) {
+    }
+
+
+    public function getMasterparts ($filteredData) {
+
     }
 }
