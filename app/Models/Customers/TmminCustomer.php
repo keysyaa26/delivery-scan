@@ -15,4 +15,9 @@ class TmminCustomer extends BaseCustomer
     {
         return 'tmmin_log';
     }
+
+    public function getTableMasterparts(): string
+    {
+        return 'masterpart_tmmin';
+    }
 }

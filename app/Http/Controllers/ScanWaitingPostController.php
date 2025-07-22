@@ -6,34 +6,29 @@ use Database\Factories\CustomerFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
-class ScanWaitingPostController extends Controller
+class ScanWaitingPostController extends BaseController
 {
     use \Illuminate\Foundation\Validation\ValidatesRequests;
-    public function index(Request $request)
-    {
 
-        // ambil data manifest untuk tabel
-        $customer = strtolower(session('customer'));
-        $cycle = session('cycle');
+    public function index () {
+        $manifests = null;
 
-        $manifestCustomer = CustomerFactory::createCustomerInstance($customer);
-        $dataManifest =$manifestCustomer->checkManifestCustomer($cycle); //bentuk collection (hrs loop)
-
-        if ($request->query('date')) {
-            $date = $request->query('date');
-            $dataManifest = $dataManifest->filter(function ($item) use ($date) {
-                return Carbon::parse($item->tanggal_order)->toDateString() === $date;
-            });
+        if(session('customer')) {
+            $manifests = $this->dataIndex();
         }
 
-        $manifests = $manifestCustomer->getAllWithStatus($dataManifest); //ada status dari tb_log
+        if (request()->ajax()) {
+            logger()->debug('Ajax request received');
+            return view('partials.table-manifest', ['manifests' => $manifests, 'counter' => 1])->render();
+        }
 
-        return view('pages.wp-index', compact( 'customer', 'cycle', 'manifests'));
-    }
-
-    public function openScanWaitingPost (Request $request) {
-        return view('scan.waiting-post');
+        $user = Auth::user();
+        if (in_array($user->id_role, [1, 2])) {
+            return view('pages.leader', compact('manifests'));
+        }
+        return view('pages.admin', compact('manifests'));
     }
 
     public function storeScan(Request $request) {
@@ -42,11 +37,15 @@ class ScanWaitingPostController extends Controller
             'cycle' => 'required',
         ]);
 
+        $date = $request->input('date');
+
         try {
             session([
                 'customer' => $request->input('customer'),
                 'cycle' => $request->input('cycle'),
             ]);
+
+            $manifests = $this->dataIndex($date);
 
             return response()
                 ->json([
@@ -63,4 +62,6 @@ class ScanWaitingPostController extends Controller
                 ], 500);
         }
     }
+
+
 }

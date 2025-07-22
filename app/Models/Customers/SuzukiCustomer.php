@@ -15,4 +15,9 @@ class SuzukiCustomer extends BaseCustomer
     {
         return 'suzuki_log';
     }
+
+    public function getTableMasterparts(): string
+    {
+        return 'masterpart_suzuki';
+    }
 }

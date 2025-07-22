@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name', 'Dashboard') }}</title>
+    <title>{{ $title ?? 'Scan Delivery' }}</title>
 
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -42,7 +42,7 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{-- <i class="fas fa-user-circle me-1"></i> {{ Auth::user()->full_name }} --}}
+                            <i class="fas fa-user-circle me-1"></i> {{ Illuminate\Support\Facades\Auth::user()->full_name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                             <li>
@@ -98,34 +98,17 @@
 
 
     <!-- SweetAlert -->
-    @if(session('alert'))
+    @if(session('success') || session('error'))
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            @php
-                $alertType = session('success') ? 'success' : (session('error') ? 'error' : 'warning');
-                $alertMessage = session('success') ?? session('error') ?? session('warning') ?? '';
-            @endphp
-            let alertType = "{{ $alertType }}";
-            let alertMessage = "{{ $alertMessage }}";
-            let title = "";
-            if (alertType === 'success') {
-                title = 'Sukses!';
-            } else if (alertType === 'error') {
-                title = 'Error!';
-            } else if (alertType === 'warning') {
-                title = 'Peringatan!';
-            }
-
-            Swal.fire({
-                title: "",
-                text: '{{ session('alert.message') }}',
-                background: 'rgba(0, 0, 0, 0.8)',
-                color: 'white',
-                timer: 3000,
-                showConfirmButton: false
-            });
+        document.addEventListener("DOMContentLoaded", function () {
+        Swal.fire({
+            icon: '{{ session('success') ? 'success' : 'error' }}',
+            title: '{{ session('success') ? 'Berhasil!' : 'Gagal!' }}',
+            text: '{{ session('success') ?? session('error') }}',
+            timer: 3000,
+            showConfirmButton: false
         });
+    });
     </script>
     @endif
 </body>

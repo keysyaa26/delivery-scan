@@ -25,4 +25,9 @@ class AdmCustomer extends BaseCustomer
     {
         return 'adm_log';
     }
+
+    public function getTableMasterparts(): string
+    {
+        return 'masterpart_adm';
+    }
 }

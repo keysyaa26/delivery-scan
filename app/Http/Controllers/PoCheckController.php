@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Database\Factories\CustomerFactory;
 use Illuminate\Support\Facades\Auth;
+use Http\Controllers\ScanWaitingPostController;
 
 class PoCheckController extends BaseController
 {
@@ -15,12 +16,11 @@ class PoCheckController extends BaseController
 
     public function processScan(Request $request) {
         $request->validate([
-            'barcode_result' => 'required',
+            'manifest' => 'required',
         ]);
 
 
-        $manifest = request()->input('barcode_result');
-        // $manifest = 'HPM 002024040101';
+        $manifest = request()->input('manifest');
         $process = 'check_po';
         $customer = strtolower(session('customer'));
         $cycle = session('cycle');
@@ -39,7 +39,7 @@ class PoCheckController extends BaseController
                 return response()
                     ->json([
                         'success' => false,
-                        'message' => 'Data manifest tidak sesuai!',
+                        'message' => 'Data manifest tidak sesuai!'
                     ], 200);
             }
         } catch (\Throwable $e) {
