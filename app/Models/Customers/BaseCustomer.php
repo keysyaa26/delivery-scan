@@ -111,7 +111,6 @@ abstract class BaseCustomer extends Model
     }
 
 
-    public function getMasterparts ($filteredData) {
-
+    public function getMasterparts () {
     }
 }
