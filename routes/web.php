@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(ScanWaitingPostController::class)
         ->name('wp.')
-        ->prefix(('waiting-post'))
+        ->prefix('waiting-post')
         ->group(function () {
             Route::post('store-scan', 'storeScan')->name('store-scan');
             Route::get('index', 'index')->name('index');

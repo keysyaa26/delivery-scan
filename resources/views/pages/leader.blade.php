@@ -10,13 +10,18 @@
 <div class="card">
     <div class="card-body">
         <h4 class="mb-4">Data Waiting Post</h4>
-        <form method="POST" id="formWaitingPost">
-            @csrf
 
+        {{-- form tanggal --}}
+        <form action="{{route('wp.index')}}" method="GET" id="dateForm">
+            @csrf
             <label for="dateInput" class="form-label">Tanggal Delivery</label>
             <div class="col-md-4">
-                <input type="date" name="date" id="dateInput" value="{{old('date')}}" class="form-control" value="{{ request('date') }}">
+                <input type="date" name="date" id="dateInput" class="form-control" value="{{ request('date') }}">
             </div>
+        </form>
+
+        <form method="POST" id="formWaitingPost">
+            @csrf
 
             <div class="mb-3">
                 <label for="inputCustomer" class="form-label">Customer</label>
@@ -49,6 +54,7 @@
             document.getElementById('inputCustomer').addEventListener('keydown', handleEnter);
             document.getElementById('inputCycle').addEventListener('keydown', handleEnter);
             document.getElementById('inputManifest').addEventListener('keydown', handleEnter);
+            document.getElementById('inputParts').addEventListener('keydown', handleEnter);
 
             const userRole = {{ auth()->user()->id_role }};
 
@@ -56,39 +62,47 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
 
-                    scanWP();
+                    if (e.target.id === 'inputCustomer' || e.target.id === 'inputCycle') {
+                        await scanWP();
+                    } else if ( e.target.id === 'inputManifest' ) {
+                        await inputManifest();
+                    } else if ( e.target.id === 'inputParts' ) {
+                        await inputParts();
+                    }
+
                 }
             }
 
-            document.getElementById('inputManifest').addEventListener('keydown', async function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-
-                inputManifest();
-                }
-            });
-
-            function refreshTabel() {
-                fetch("{{ route('wp.index') }}", {
-                    method: "GET",
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'  // <== ini WAJIB
-                        }
-                    })
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById('table-manifest').innerHTML = html;
-                });
-            }
 
             function inputManifest() {
                 const manifest = document.getElementById('inputManifest').value;
                 const csrfToken = document.querySelector('input[name="_token"]').value;
 
                 console.log('Script loaded!');
+                Swal.fire({
+                    title: 'OK!',
+                    text: 'Manifest berhasil discan',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                })
 
                 console.log(manifest);
                 document.getElementById('form3-container').style.display = 'block';
+            }
+
+            function inputParts() {
+                const parts = document.getElementById('inputParts').value;
+                const csrfToken = document.querySelector('input[name="_token"]').value;
+
+                Swal.fire({
+                    title: 'OK!',
+                    text: 'Parts berhasil discan',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                })
+                console.log(parts);
             }
 
             async function scanWP () {
@@ -100,7 +114,7 @@
                     if (!customer || !cycle) {
                         Swal.fire({
                             title: 'Warning!',
-                            text: 'Please fill all fields',
+                            text: 'Input kolom tidak lengkap',
                             icon: 'warning',
                             timer: 2000,
                             showConfirmButton: false
@@ -150,6 +164,25 @@
                         console.timeEnd("scannerPost");
                     }
                 }
+
+            document.getElementById('dateInput').addEventListener('change', function () {
+                    const selectedDate = this.value;
+                    const baseUrl = "{{ route('wp.index') }}"; // URL dasar dari route Laravel
+                    const url = new URL(baseUrl, window.location.origin); // Pastikan URL absolut
+                    url.searchParams.append('date', selectedDate);
+
+                    fetch(url.toString(), {
+                        method: "GET",
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        console.log(html);
+                        document.getElementById('table-manifest').innerHTML = html;
+                    })
+                });
         </script>
     </div>
 </div>

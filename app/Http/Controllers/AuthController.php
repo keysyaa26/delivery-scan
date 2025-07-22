@@ -37,6 +37,7 @@ class AuthController extends Controller
 
     public function destroy(Request $request)
     {
+        session()->forget(['customer','cycle']);
         Auth::logout();
         return redirect()->route('/');
     }

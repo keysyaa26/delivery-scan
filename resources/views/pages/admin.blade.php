@@ -10,14 +10,17 @@
 <div class="card">
     <div class="card-body">
         <h4 class="mb-4">Data Waiting Post</h4>
-        <form method="POST" id="formWaitingPost">
+        {{-- form tanggal --}}
+        <form action="{{route('wp.index')}}" method="GET" id="dateForm">
             @csrf
-
             <label for="dateInput" class="form-label">Tanggal Delivery</label>
             <div class="col-md-4">
-                <input type="date" name="date" id="dateInput" value="{{old('date')}}" class="form-control" value="{{ request('date') }}">
+                <input type="date" name="date" id="dateInput" class="form-control" value="{{ request('date') }}">
             </div>
+        </form>
 
+        <form method="POST" id="formWaitingPost">
+            @csrf
             <div class="mb-3">
                 <label for="inputCustomer" class="form-label">Customer</label>
                 <input type="text" name="customer" id="inputCustomer" value="{{old('customer')}}" placeholder="Scan customer..." class="form-control" autofocus>
@@ -40,6 +43,7 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
+
             // Daftarkan event listener hanya pada input fields yang relevan
             document.getElementById('inputCustomer').addEventListener('keydown', handleEnter);
             document.getElementById('inputCycle').addEventListener('keydown', handleEnter);
@@ -49,9 +53,58 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
 
-                    const customer = document.getElementById('inputCustomer').value;
+                    if(e.target.id === 'inputCustomer' || e.target.id === 'inputCycle') {
+                        await inputWP();
+                    } else {
+                        await inputManifest();
+                    }
+                }
+            }
+
+            function refreshTabel() {
+            const dateInput = document.getElementById('dateInput');
+                const selectedDate = dateInput ? dateInput.value : '';
+
+                const baseUrl = "{{ route('wp.index') }}";
+                const url = new URL(baseUrl, window.location.origin);
+
+                if (selectedDate) { // Hanya tambahkan parameter jika tanggal dipilih
+                    url.searchParams.append('date', selectedDate);
+                }
+                fetch(url.toString(), {
+                    method: "GET",
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'  // <== ini WAJIB
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('table-manifest').innerHTML = html;
+                    });
+            }
+
+            document.getElementById('dateInput').addEventListener('change', function () {
+                    const selectedDate = this.value;
+                    const baseUrl = "{{ route('wp.index') }}"; // URL dasar dari route Laravel
+                    const url = new URL(baseUrl, window.location.origin); // Pastikan URL absolut
+                    url.searchParams.append('date', selectedDate);
+
+                    fetch(url.toString(), {
+                        method: "GET",
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        console.log(html);
+                        document.getElementById('table-manifest').innerHTML = html;
+                    })
+                });
+
+            async function inputWP() {
+                const customer = document.getElementById('inputCustomer').value;
                     const cycle = document.getElementById('inputCycle').value;
-                    const date = document.getElementById('dateInput').value;
 
                     // Hanya proses jika ada nilai di semua field
                     if (!customer || !cycle) {
@@ -79,7 +132,6 @@
                             body: JSON.stringify({
                                 customer: customer,
                                 cycle: cycle,
-                                date: date
                             })
                         });
 
@@ -108,13 +160,9 @@
                     } finally {
                         console.timeEnd("scannerPost");
                     }
-                }
             }
 
-            document.getElementById('inputManifest').addEventListener('keydown', async function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-
+            async function inputManifest() {
                 const manifest = document.getElementById('inputManifest').value;
                 const csrfToken = document.querySelector('input[name="_token"]').value;
                 // console.log(manifest);
@@ -147,20 +195,6 @@
                     })
                     .catch(error => {
                         console.error("Error:", error);
-                    });
-                }
-            });
-
-            function refreshTabel() {
-                fetch("{{ route('wp.index') }}", {
-                    method: "GET",
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'  // <== ini WAJIB
-                        }
-                    })
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById('table-manifest').innerHTML = html;
                     });
             }
         </script>
