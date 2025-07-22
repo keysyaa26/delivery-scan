@@ -67,7 +67,7 @@
                     } else if ( e.target.id === 'inputManifest' ) {
                         await inputManifest();
                     } else if ( e.target.id === 'inputParts' ) {
-                        console.log('parts input');
+                        await inputParts();
                     }
 
                 }
@@ -79,6 +79,13 @@
                 const csrfToken = document.querySelector('input[name="_token"]').value;
 
                 console.log('Script loaded!');
+                Swal.fire({
+                    title: 'OK!',
+                    text: 'Manifest berhasil discan',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                })
 
                 console.log(manifest);
                 document.getElementById('form3-container').style.display = 'block';
@@ -88,6 +95,13 @@
                 const parts = document.getElementById('inputParts').value;
                 const csrfToken = document.querySelector('input[name="_token"]').value;
 
+                Swal.fire({
+                    title: 'OK!',
+                    text: 'Parts berhasil discan',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                })
                 console.log(parts);
             }
 
@@ -100,7 +114,7 @@
                     if (!customer || !cycle) {
                         Swal.fire({
                             title: 'Warning!',
-                            text: 'Please fill all fields',
+                            text: 'Input kolom tidak lengkap',
                             icon: 'warning',
                             timer: 2000,
                             showConfirmButton: false
