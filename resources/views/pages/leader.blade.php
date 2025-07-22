@@ -74,26 +74,51 @@
             }
 
 
-            function inputManifest() {
-                const manifest = document.getElementById('inputManifest').value;
+            async function inputManifest() {
+                const manifest = document.getElementById('inputParts').value;
                 const csrfToken = document.querySelector('input[name="_token"]').value;
 
-                console.log('Script loaded!');
-                Swal.fire({
-                    title: 'OK!',
-                    text: 'Manifest berhasil discan',
-                    icon: 'success',
-                    timer: 2000,
-                    showConfirmButton: false
-                })
+                try{
+                    const response = await fetch ("{{ route('label.parts-data') }}",{
+                        method:"POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrfToken,
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({
+                            manifest: manifest
+                        })
+                    });
 
-                console.log(manifest);
+                    const data = await response.json();
+                    console.log(data);
+
+                    Swal.fire({
+                        title: data.success ? 'OK!' : 'NG!',
+                        text: data.message,
+                        icon: data.success ? 'success' : 'error',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                } catch (error) {
+                    console.error("Error:", error);
+
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while processing your request',
+                        icon: 'error',
+                        timer: 2000,
+                        showConfirmButton: false
+                    })
+                }
+
                 document.getElementById('form3-container').style.display = 'block';
             }
 
-            function inputParts() {
+            async function inputParts() {
                 const parts = document.getElementById('inputParts').value;
-                const csrfToken = document.querySelector('input[name="_token"]').value;
 
                 Swal.fire({
                     title: 'OK!',

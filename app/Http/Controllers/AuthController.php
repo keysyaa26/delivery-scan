@@ -41,4 +41,15 @@ class AuthController extends Controller
         Auth::logout();
         return redirect()->route('/');
     }
+
+    public function endSessionCustomer(Request $request)
+    {
+        $this->forgetSession($request);
+        return redirect()->route('dashboard');
+    }
+
+    public function forgetSession(Request $request)
+    {
+        session()->forget(['customer', 'plan', 'cycle']);
+    }
 }

@@ -111,6 +111,12 @@ abstract class BaseCustomer extends Model
     }
 
 
-    public function getMasterparts () {
+    public function getMasterparts ($manifest) {
+        $datas = DB::table($this->getViewTable())
+            ->orderBy('tanggal_order', 'asc')
+            ->where('dn_no', $manifest)
+            ->get();
+            
+        return $datas;
     }
 }

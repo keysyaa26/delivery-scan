@@ -10,9 +10,6 @@ use Http\Controllers\ScanWaitingPostController;
 
 class PoCheckController extends BaseController
 {
-    public function openScan() {
-        return view('scan.check-po');
-    }
 
     public function processScan(Request $request) {
         $request->validate([
