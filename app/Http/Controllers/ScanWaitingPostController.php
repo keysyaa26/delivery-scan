@@ -12,11 +12,13 @@ class ScanWaitingPostController extends BaseController
 {
     use \Illuminate\Foundation\Validation\ValidatesRequests;
 
-    public function index () {
+    public function index (Request $request) {
         $manifests = null;
 
+        $date = $request->input('date') ?? null;
+
         if(session('customer')) {
-            $manifests = $this->dataIndex();
+            $manifests = $this->dataIndex($date);
         }
 
         if (request()->ajax()) {
