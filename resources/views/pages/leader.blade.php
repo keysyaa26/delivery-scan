@@ -77,7 +77,7 @@
 
 
             async function inputManifest() {
-                const manifest = document.getElementById('inputParts').value;
+                const manifest = document.getElementById('inputManifest').value;
                 const csrfToken = document.querySelector('input[name="_token"]').value;
 
                 try{
@@ -97,6 +97,7 @@
                     document.getElementById('form3-container').style.display = 'block';
                     // tampil tabel parts
                     document.getElementById('table-container').innerHTML = data.html;
+                    console.log(data);
 
                     Swal.fire({
                         title: data.success ? 'OK!' : 'NG!',

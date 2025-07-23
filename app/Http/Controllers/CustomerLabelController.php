@@ -22,6 +22,7 @@ class CustomerLabelController extends Controller
                     'success' => true,
                     'message' => 'Data manifest sesuai!',
                     'html' => view('partials.table-parts', compact('dataParts'))->render(),
+                    'data' => $dataParts
                 ], 200);
         } else {
             return response()
@@ -30,6 +31,5 @@ class CustomerLabelController extends Controller
                     'message' => 'Data manifest tidak sesuai!'
                 ], 200);
         }
-
     }
 }
