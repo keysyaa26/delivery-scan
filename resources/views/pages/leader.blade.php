@@ -41,8 +41,10 @@
             @if (in_array(Auth::user()->id_role, [1, 2]))
             <div id="form3-container" style="display:none;">
                 @include('partials.input-parts')
+            </div>
 
-                @include('partials.table-parts')
+            <div id="table-container">
+                {{-- tampilkan di sini --}}
             </div>
             @endif
         </div>
@@ -92,7 +94,9 @@
                     });
 
                     const data = await response.json();
-                    console.log(data);
+                    document.getElementById('form3-container').style.display = 'block';
+                    // tampil tabel parts
+                    document.getElementById('table-container').innerHTML = data.html;
 
                     Swal.fire({
                         title: data.success ? 'OK!' : 'NG!',
@@ -113,8 +117,6 @@
                         showConfirmButton: false
                     })
                 }
-
-                document.getElementById('form3-container').style.display = 'block';
             }
 
             async function inputParts() {
@@ -151,7 +153,7 @@
 
                     console.time("scannerPost");
                     try {
-                        const response = await fetch('/waiting-post/store-scan', {
+                        const response = await fetch('/waiting-post/store-scan-2', {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -176,6 +178,8 @@
                         });
 
                         document.getElementById('form2-container').style.display = 'block';
+                        // tampil tabel manifest
+                        document.getElementById('table-container').innerHTML = data.html;
                     } catch (error) {
                         console.error("Error:", error);
                         Swal.fire({

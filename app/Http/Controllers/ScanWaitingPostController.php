@@ -65,5 +65,38 @@ class ScanWaitingPostController extends BaseController
         }
     }
 
+    public function storeScan2(Request $request) {
+        $this->validate($request, [
+            'customer' => 'required',
+            'cycle' => 'required',
+        ]);
+
+        $date = $request->input('date');
+
+        try {
+            session([
+                'customer' => $request->input('customer'),
+                'cycle' => $request->input('cycle'),
+            ]);
+
+            $manifests = $this->dataIndex($date);
+
+            return response()
+                ->json([
+                    'success' => true,
+                    'message' => 'Scan berhasil!',
+                    'html' => view('partials.table-manifest', compact('manifests'))->render(),
+                ], 200);
+        } catch (\Throwable $e) {
+            Log::error('QR Scan Error: '.$e->getMessage());
+
+            return response()
+                ->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan di server: ' . $e->getMessage(),
+                ], 500);
+        }
+    }
+
 
 }

@@ -21,6 +21,7 @@ class CustomerLabelController extends Controller
                 ->json([
                     'success' => true,
                     'message' => 'Data manifest sesuai!',
+                    'html' => view('partials.table-parts', compact('dataParts'))->render(),
                 ], 200);
         } else {
             return response()
