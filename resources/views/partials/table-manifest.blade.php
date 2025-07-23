@@ -8,7 +8,11 @@
                             <th>Manifest</th>
                             <th>Job No</th>
                             <th>Cycle</th>
-                            <th>Status</th>
+                            @if(in_array(Illuminate\Support\Facades\Auth::user()->id_role, [1, 2]))
+                                <th>Scan by Admin</th>
+                            @else
+                                <th>Status</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
