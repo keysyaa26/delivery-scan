@@ -24,4 +24,8 @@ class HpmCustomer extends BaseCustomer
     {
         return 'vw_data_hpm';
     }
+
+    public function labelCustomer($label) {
+        
+    }
 }
