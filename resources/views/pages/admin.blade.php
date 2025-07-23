@@ -30,6 +30,11 @@
                 <label for="inputCycle" class="form-label">Cycle</label>
                 <input type="text" name="cycle" id="inputCycle" class="form-control" value="{{old('cycle')}}" placeholder="Scan cycle..." autofocus>
             </div>
+
+            <div class="mb-3">
+                <label for="inputRoute" class="form-label">Route</label>
+                <input type="text" name="route" id="inputRoute" class="form-control" value="{{old('route')}}" placeholder="Scan route..." autofocus>
+            </div>
         </form>
 
         <div id="form2-container" style="display:none;">
@@ -47,13 +52,14 @@
             // Daftarkan event listener hanya pada input fields yang relevan
             document.getElementById('inputCustomer').addEventListener('keydown', handleEnter);
             document.getElementById('inputCycle').addEventListener('keydown', handleEnter);
+            document.getElementById('inputRoute').addEventListener('keydown', handleEnter);
             document.getElementById('inputManifest').addEventListener('keydown', handleEnter);
 
             async function handleEnter(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
 
-                    if(e.target.id === 'inputCustomer' || e.target.id === 'inputCycle') {
+                    if(e.target.id === 'inputCustomer' || e.target.id === 'inputCycle' || e.target.id === 'inputRoute') {
                         await inputWP();
                     } else {
                         await inputManifest();
@@ -103,14 +109,15 @@
                 });
 
             async function inputWP() {
-                const customer = document.getElementById('inputCustomer').value;
+                    const customer = document.getElementById('inputCustomer').value;
                     const cycle = document.getElementById('inputCycle').value;
+                    const route = document.getElementById('inputRoute').value;
 
                     // Hanya proses jika ada nilai di semua field
                     if (!customer || !cycle) {
                         Swal.fire({
                             title: 'Warning!',
-                            text: 'Please fill all fields',
+                            text: 'Kolom tidak diisi lengkap',
                             icon: 'warning',
                             timer: 2000,
                             showConfirmButton: false
@@ -132,6 +139,7 @@
                             body: JSON.stringify({
                                 customer: customer,
                                 cycle: cycle,
+                                route: route
                             })
                         });
 

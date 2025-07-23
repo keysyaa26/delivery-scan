@@ -17,9 +17,10 @@ abstract class BaseCustomer extends Model
     abstract public function getViewTable(): string;
 
     // ambil data manifest pada cycle yg ditentukan
-    public function checkManifestCustomer($cycle){
+    public function checkManifestCustomer($cycle, $route) {
         $datas = DB::table($this->getTableName())
                 ->where('cycle', $cycle)
+                ->where('plan', $route)
                 ->orderBy('tanggal_order', 'asc')
                 ->get();
 
@@ -116,7 +117,7 @@ abstract class BaseCustomer extends Model
             ->orderBy('tanggal_order', 'asc')
             ->where('dn_no', $manifest)
             ->get();
-            
+
         return $datas;
     }
 }

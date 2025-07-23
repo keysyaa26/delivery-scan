@@ -32,6 +32,11 @@
                 <label for="inputCycle" class="form-label">Cycle</label>
                 <input type="text" name="cycle" id="inputCycle" class="form-control" value="{{old('cycle')}}" placeholder="Scan cycle..." autofocus>
             </div>
+
+            <div class="mb-3">
+                <label for="inputRoute" class="form-label">Route</label>
+                <input type="text" name="route" id="inputRoute" class="form-control" value="{{old('route')}}" placeholder="Scan route..." autofocus>
+            </div>
         </form>
 
         <div id="form2-container" style="display:none;">
@@ -55,6 +60,7 @@
             // Daftarkan event listener hanya pada input fields yang relevan
             document.getElementById('inputCustomer').addEventListener('keydown', handleEnter);
             document.getElementById('inputCycle').addEventListener('keydown', handleEnter);
+            document.getElementById('inputRoute').addEventListener('keydown', handleEnter);
             document.getElementById('inputManifest').addEventListener('keydown', handleEnter);
             document.getElementById('inputParts').addEventListener('keydown', handleEnter);
 
@@ -64,7 +70,7 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
 
-                    if (e.target.id === 'inputCustomer' || e.target.id === 'inputCycle') {
+                    if (e.target.id === 'inputCustomer' || e.target.id === 'inputCycle' || e.target.id === 'inputRoute') {
                         await scanWP();
                     } else if ( e.target.id === 'inputManifest' ) {
                         await inputManifest();
@@ -136,6 +142,7 @@
             async function scanWP () {
                     const customer = document.getElementById('inputCustomer').value;
                     const cycle = document.getElementById('inputCycle').value;
+                    const route = document.getElementById('inputRoute').value;
                     const date = document.getElementById('dateInput').value;
 
                     // Hanya proses jika ada nilai di semua field
@@ -164,7 +171,8 @@
                             body: JSON.stringify({
                                 customer: customer,
                                 cycle: cycle,
-                                date: date
+                                date: date,
+                                route: route
                             })
                         });
 

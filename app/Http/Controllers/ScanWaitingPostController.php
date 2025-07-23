@@ -37,6 +37,7 @@ class ScanWaitingPostController extends BaseController
         $this->validate($request, [
             'customer' => 'required',
             'cycle' => 'required',
+            'route' => 'required',
         ]);
 
         $date = $request->input('date');
@@ -45,6 +46,7 @@ class ScanWaitingPostController extends BaseController
             session([
                 'customer' => $request->input('customer'),
                 'cycle' => $request->input('cycle'),
+                'route' => $request->input('route'),
             ]);
 
             $manifests = $this->dataIndex($date);
@@ -69,6 +71,7 @@ class ScanWaitingPostController extends BaseController
         $this->validate($request, [
             'customer' => 'required',
             'cycle' => 'required',
+            'route' => 'required',
         ]);
 
         $date = $request->input('date');
@@ -77,6 +80,7 @@ class ScanWaitingPostController extends BaseController
             session([
                 'customer' => $request->input('customer'),
                 'cycle' => $request->input('cycle'),
+                'route' => $request->input('route'),
             ]);
 
             $manifests = $this->dataIndex($date);
