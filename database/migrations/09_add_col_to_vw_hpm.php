@@ -70,8 +70,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('vw_hpm', function (Blueprint $table) {
-            //
-        });
+        DB::statement("DROP VIEW IF EXISTS vw_data_hpm");
     }
 };

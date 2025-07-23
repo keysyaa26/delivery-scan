@@ -67,7 +67,7 @@
         <div>
             <strong>Data aktif:</strong>
             📦 Customer: {{ session('customer') }},
-            📋 Plan: {{ session('plan') ?? '-'}},
+            📋 Plan: {{ session('route') ?? '-'}},
             🔄 Cycle: {{ session('cycle') ?? '-'}}
         </div>
         <form action="{{ route('scan.end-session') }}" method="POST" class="d-inline">
