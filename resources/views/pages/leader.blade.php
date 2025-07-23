@@ -14,14 +14,15 @@
         {{-- form tanggal --}}
         <form action="{{route('wp.index')}}" method="GET" id="dateForm">
             @csrf
-            <label for="dateInput" class="form-label">Tanggal Delivery</label>
-            <div class="col-md-4">
-                <input type="date" name="date" id="dateInput" class="form-control" value="{{ request('date') }}">
-            </div>
         </form>
 
         <form method="POST" id="formWaitingPost">
             @csrf
+
+            <div class="mb-3">
+                <label for="dateInput" class="form-label">Tanggal Delivery</label>
+                <input type="date" name="date" id="dateInput" class="form-control" value="{{ request('date') }}">
+            </div>
 
             <div class="mb-3">
                 <label for="inputCustomer" class="form-label">Customer</label>
@@ -59,6 +60,7 @@
         <script>
             // Daftarkan event listener hanya pada input fields yang relevan
             document.getElementById('inputCustomer').addEventListener('keydown', handleEnter);
+            document.getElementById('dateInput').addEventListener('change', handleEnter);
             document.getElementById('inputCycle').addEventListener('keydown', handleEnter);
             document.getElementById('inputRoute').addEventListener('keydown', handleEnter);
             document.getElementById('inputManifest').addEventListener('keydown', handleEnter);
@@ -70,7 +72,7 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
 
-                    if (e.target.id === 'inputCustomer' || e.target.id === 'inputCycle' || e.target.id === 'inputRoute') {
+                    if (e.target.id === 'inputCustomer' || e.target.id === 'inputCycle' || e.target.id === 'inputRoute' || e.target.id === 'dateInput') {
                         await scanWP();
                     } else if ( e.target.id === 'inputManifest' ) {
                         await inputManifest();
@@ -202,25 +204,6 @@
                         console.timeEnd("scannerPost");
                     }
                 }
-
-            document.getElementById('dateInput').addEventListener('change', function () {
-                    const selectedDate = this.value;
-                    const baseUrl = "{{ route('wp.index') }}"; // URL dasar dari route Laravel
-                    const url = new URL(baseUrl, window.location.origin); // Pastikan URL absolut
-                    url.searchParams.append('date', selectedDate);
-
-                    fetch(url.toString(), {
-                        method: "GET",
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-                    .then(response => response.text())
-                    .then(html => {
-                        console.log(html);
-                        document.getElementById('table-manifest').innerHTML = html;
-                    })
-                });
         </script>
     </div>
 </div>

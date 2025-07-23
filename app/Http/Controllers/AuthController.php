@@ -25,7 +25,7 @@ class AuthController extends Controller
 
         if ($user) {
             Auth::login($user);
-            return redirect()->route('dashboard');
+            return redirect()->route('wp.index');
         }
 
         return response()
