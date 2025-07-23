@@ -34,9 +34,9 @@
                             <td>{{ $manifest->cycle }}</td> {{-- FIX: Added closing </td> here --}}
                             <td>
                                 @if ($manifest->status === null)
-                                    {{-- Jika status null, tampilkan kosong --}}
+                                    <b>Open</b>
                                 @elseif ($manifest->status === 'OK')
-                                    <b style="color: green;">OK</b>
+                                    <b style="color: green;">Close</b>
                                 @elseif ($manifest->status === 'NG')
                                     <b style="color: red;">NG</b>
                                 @else
