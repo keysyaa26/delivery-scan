@@ -39,9 +39,10 @@ abstract class BaseController extends Controller
             // ambil data manifest untuk tabel
             $customer = strtolower(session('customer'));
             $cycle = session('cycle');
+            $route = session('route');
 
             $manifestCustomer = CustomerFactory::createCustomerInstance($customer);
-            $dataManifest =$manifestCustomer->checkManifestCustomer($cycle); //bentuk collection (hrs loop)
+            $dataManifest =$manifestCustomer->checkManifestCustomer($cycle, $route); //bentuk collection (hrs loop)
 
             if ($date) {
                 $dataManifest = $dataManifest->filter(function ($item) use ($date) {

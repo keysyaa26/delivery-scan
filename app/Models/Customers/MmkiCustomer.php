@@ -20,4 +20,9 @@ class MmkiCustomer extends BaseCustomer
     {
         return 'masterpart_mmki';
     }
+
+    public function getViewTable(): string
+    {
+        return 'vw_data_mmki';
+    }
 }

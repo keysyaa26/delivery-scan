@@ -14,14 +14,15 @@
         {{-- form tanggal --}}
         <form action="{{route('wp.index')}}" method="GET" id="dateForm">
             @csrf
-            <label for="dateInput" class="form-label">Tanggal Delivery</label>
-            <div class="col-md-4">
-                <input type="date" name="date" id="dateInput" class="form-control" value="{{ request('date') }}">
-            </div>
         </form>
 
         <form method="POST" id="formWaitingPost">
             @csrf
+
+            <div class="mb-3">
+                <label for="dateInput" class="form-label">Tanggal Delivery</label>
+                <input type="date" name="date" id="dateInput" class="form-control" value="{{ request('date') }}">
+            </div>
 
             <div class="mb-3">
                 <label for="inputCustomer" class="form-label">Customer</label>
@@ -32,6 +33,11 @@
                 <label for="inputCycle" class="form-label">Cycle</label>
                 <input type="text" name="cycle" id="inputCycle" class="form-control" value="{{old('cycle')}}" placeholder="Scan cycle..." autofocus>
             </div>
+
+            <div class="mb-3">
+                <label for="inputRoute" class="form-label">Route</label>
+                <input type="text" name="route" id="inputRoute" class="form-control" value="{{old('route')}}" placeholder="Scan route..." autofocus>
+            </div>
         </form>
 
         <div id="form2-container" style="display:none;">
@@ -41,8 +47,10 @@
             @if (in_array(Auth::user()->id_role, [1, 2]))
             <div id="form3-container" style="display:none;">
                 @include('partials.input-parts')
+            </div>
 
-                @include('partials.table-parts')
+            <div id="table-container">
+                {{-- tampilkan di sini --}}
             </div>
             @endif
         </div>
@@ -52,7 +60,9 @@
         <script>
             // Daftarkan event listener hanya pada input fields yang relevan
             document.getElementById('inputCustomer').addEventListener('keydown', handleEnter);
+            document.getElementById('dateInput').addEventListener('change', handleEnter);
             document.getElementById('inputCycle').addEventListener('keydown', handleEnter);
+            document.getElementById('inputRoute').addEventListener('keydown', handleEnter);
             document.getElementById('inputManifest').addEventListener('keydown', handleEnter);
             document.getElementById('inputParts').addEventListener('keydown', handleEnter);
 
@@ -62,7 +72,7 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
 
-                    if (e.target.id === 'inputCustomer' || e.target.id === 'inputCycle') {
+                    if (e.target.id === 'inputCustomer' || e.target.id === 'inputCycle' || e.target.id === 'inputRoute' || e.target.id === 'dateInput') {
                         await scanWP();
                     } else if ( e.target.id === 'inputManifest' ) {
                         await inputManifest();
@@ -74,26 +84,52 @@
             }
 
 
-            function inputManifest() {
+            async function inputManifest() {
                 const manifest = document.getElementById('inputManifest').value;
                 const csrfToken = document.querySelector('input[name="_token"]').value;
 
-                console.log('Script loaded!');
-                Swal.fire({
-                    title: 'OK!',
-                    text: 'Manifest berhasil discan',
-                    icon: 'success',
-                    timer: 2000,
-                    showConfirmButton: false
-                })
+                try{
+                    const response = await fetch ("{{ route('label.parts-data') }}",{
+                        method:"POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrfToken,
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({
+                            manifest: manifest
+                        })
+                    });
 
-                console.log(manifest);
-                document.getElementById('form3-container').style.display = 'block';
+                    const data = await response.json();
+                    document.getElementById('form3-container').style.display = 'block';
+                    // tampil tabel parts
+                    document.getElementById('table-container').innerHTML = data.html;
+                    console.log(data);
+
+                    Swal.fire({
+                        title: data.success ? 'OK!' : 'NG!',
+                        text: data.message,
+                        icon: data.success ? 'success' : 'error',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                } catch (error) {
+                    console.error("Error:", error);
+
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while processing your request',
+                        icon: 'error',
+                        timer: 2000,
+                        showConfirmButton: false
+                    })
+                }
             }
 
-            function inputParts() {
+            async function inputParts() {
                 const parts = document.getElementById('inputParts').value;
-                const csrfToken = document.querySelector('input[name="_token"]').value;
 
                 Swal.fire({
                     title: 'OK!',
@@ -108,6 +144,7 @@
             async function scanWP () {
                     const customer = document.getElementById('inputCustomer').value;
                     const cycle = document.getElementById('inputCycle').value;
+                    const route = document.getElementById('inputRoute').value;
                     const date = document.getElementById('dateInput').value;
 
                     // Hanya proses jika ada nilai di semua field
@@ -126,7 +163,7 @@
 
                     console.time("scannerPost");
                     try {
-                        const response = await fetch('/waiting-post/store-scan', {
+                        const response = await fetch('/waiting-post/store-scan-2', {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -136,7 +173,8 @@
                             body: JSON.stringify({
                                 customer: customer,
                                 cycle: cycle,
-                                date: date
+                                date: date,
+                                route: route
                             })
                         });
 
@@ -151,6 +189,8 @@
                         });
 
                         document.getElementById('form2-container').style.display = 'block';
+                        // tampil tabel manifest
+                        document.getElementById('table-container').innerHTML = data.html;
                     } catch (error) {
                         console.error("Error:", error);
                         Swal.fire({
@@ -164,25 +204,6 @@
                         console.timeEnd("scannerPost");
                     }
                 }
-
-            document.getElementById('dateInput').addEventListener('change', function () {
-                    const selectedDate = this.value;
-                    const baseUrl = "{{ route('wp.index') }}"; // URL dasar dari route Laravel
-                    const url = new URL(baseUrl, window.location.origin); // Pastikan URL absolut
-                    url.searchParams.append('date', selectedDate);
-
-                    fetch(url.toString(), {
-                        method: "GET",
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-                    .then(response => response.text())
-                    .then(html => {
-                        console.log(html);
-                        document.getElementById('table-manifest').innerHTML = html;
-                    })
-                });
         </script>
     </div>
 </div>

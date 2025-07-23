@@ -8,7 +8,11 @@
                             <th>Manifest</th>
                             <th>Job No</th>
                             <th>Cycle</th>
-                            <th>Status</th>
+                            @if(in_array(Illuminate\Support\Facades\Auth::user()->id_role, [1, 2]))
+                                <th>Scan by Admin</th>
+                            @else
+                                <th>Status</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -30,9 +34,9 @@
                             <td>{{ $manifest->cycle }}</td> {{-- FIX: Added closing </td> here --}}
                             <td>
                                 @if ($manifest->status === null)
-                                    {{-- Jika status null, tampilkan kosong --}}
+                                    <b>Open</b>
                                 @elseif ($manifest->status === 'OK')
-                                    <b style="color: green;">OK</b>
+                                    <b style="color: green;">Close</b>
                                 @elseif ($manifest->status === 'NG')
                                     <b style="color: red;">NG</b>
                                 @else

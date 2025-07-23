@@ -18,15 +18,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/', 'index')->name('/');
     Route::post('/login', 'login')->name('login');
     Route::post('/logout', 'destroy')->name('logout');
+    Route::post('/close-scan','endSessionCustomer')->name('scan.end-session');
 });
-
-
-Route::controller(ScanController::class)->name('scan.')->group(function () {
-    Route::post('/store-scan', 'storeScanCustomer')->name('store-data');
-    Route::get('/open-scan', 'openScan')->name('open');
-    Route::post('/close-scan', 'endSessionCustomer')->name('end-session');
-});
-
 
 Route::middleware('auth')->group(function () {
     Route::controller(DashboardController::class)
@@ -39,6 +32,7 @@ Route::middleware('auth')->group(function () {
         ->prefix('waiting-post')
         ->group(function () {
             Route::post('store-scan', 'storeScan')->name('store-scan');
+            Route::post('store-scan-2', 'storeScan2')->name('store-scan');
             Route::get('index', 'index')->name('index');
             Route::get('tes', 'tes')->name('tes');
             Route::get('/data-manifest', 'dataManifest')->name('data-manifest');
@@ -48,13 +42,15 @@ Route::middleware('auth')->group(function () {
         ->name('po.')
         ->prefix('manifest')
         ->group(function () {
-            Route::get('open-scan', 'openScan')->name('open-scan');
             Route::post('store-scan', 'processScan')->name('store-scan');
     });
 
-    // Route::controller(CustomerLabelController::class)
-    //     ->name('kanban.')
-    //     ->prefix('customer-label')
+    Route::controller(CustomerLabelController::class)
+        ->name('label.')
+        ->prefix('customer-label')
+        ->group(function () {
+            Route::post('parts-data', 'getPartsData')->name('parts-data');
+    });
 
 });
 

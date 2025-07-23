@@ -13,13 +13,14 @@ abstract class BaseCustomer extends Model
     protected $logChannel;
     abstract public function getTableName(): string;
     abstract protected function getLogChannel(): string;
-
     abstract public function getTableMasterparts(): string;
+    abstract public function getViewTable(): string;
 
     // ambil data manifest pada cycle yg ditentukan
-    public function checkManifestCustomer($cycle){
+    public function checkManifestCustomer($cycle, $route) {
         $datas = DB::table($this->getTableName())
                 ->where('cycle', $cycle)
+                ->where('plan', $route)
                 ->orderBy('tanggal_order', 'asc')
                 ->get();
 
@@ -111,7 +112,12 @@ abstract class BaseCustomer extends Model
     }
 
 
-    public function getMasterparts ($filteredData) {
+    public function getMasterparts ($manifest) {
+        $datas = DB::table($this->getViewTable())
+            ->orderBy('tanggal_order', 'asc')
+            ->where('dn_no', $manifest)
+            ->get();
 
+        return $datas;
     }
 }

@@ -20,4 +20,9 @@ class SuzukiCustomer extends BaseCustomer
     {
         return 'masterpart_suzuki';
     }
+
+    public function getViewTable(): string
+    {
+        return 'vw_data_suzuki';
+    }
 }

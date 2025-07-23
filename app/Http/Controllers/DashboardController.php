@@ -12,13 +12,4 @@ class DashboardController extends Controller
     {
         return view('dashboard');
     }
-
-    public function cardDashboard()
-    {
-        // untuk role
-        $user = Auth::user();
-        $user = TblUser::where('username', $user->username)
-            ->get('id_role');
-        return view('dashboard.card-dashboard');
-    }
 }

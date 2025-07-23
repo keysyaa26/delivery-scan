@@ -25,7 +25,7 @@ class AuthController extends Controller
 
         if ($user) {
             Auth::login($user);
-            return redirect()->route('dashboard');
+            return redirect()->route('wp.index');
         }
 
         return response()
@@ -40,5 +40,16 @@ class AuthController extends Controller
         session()->forget(['customer','cycle']);
         Auth::logout();
         return redirect()->route('/');
+    }
+
+    public function endSessionCustomer(Request $request)
+    {
+        $this->forgetSession($request);
+        return redirect()->route('dashboard');
+    }
+
+    public function forgetSession(Request $request)
+    {
+        session()->forget(['customer', 'plan', 'cycle']);
     }
 }

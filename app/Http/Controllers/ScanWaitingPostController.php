@@ -37,6 +37,7 @@ class ScanWaitingPostController extends BaseController
         $this->validate($request, [
             'customer' => 'required',
             'cycle' => 'required',
+            'route' => 'required',
         ]);
 
         $date = $request->input('date');
@@ -45,6 +46,7 @@ class ScanWaitingPostController extends BaseController
             session([
                 'customer' => $request->input('customer'),
                 'cycle' => $request->input('cycle'),
+                'route' => $request->input('route'),
             ]);
 
             $manifests = $this->dataIndex($date);
@@ -53,6 +55,41 @@ class ScanWaitingPostController extends BaseController
                 ->json([
                     'success' => true,
                     'message' => 'Scan berhasil!',
+                ], 200);
+        } catch (\Throwable $e) {
+            Log::error('QR Scan Error: '.$e->getMessage());
+
+            return response()
+                ->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan di server: ' . $e->getMessage(),
+                ], 500);
+        }
+    }
+
+    public function storeScan2(Request $request) {
+        $this->validate($request, [
+            'customer' => 'required',
+            'cycle' => 'required',
+            'route' => 'required',
+        ]);
+
+        $date = $request->input('date');
+
+        try {
+            session([
+                'customer' => $request->input('customer'),
+                'cycle' => $request->input('cycle'),
+                'route' => $request->input('route'),
+            ]);
+
+            $manifests = $this->dataIndex($date);
+
+            return response()
+                ->json([
+                    'success' => true,
+                    'message' => 'Scan berhasil!',
+                    'html' => view('partials.table-manifest', compact('manifests'))->render(),
                 ], 200);
         } catch (\Throwable $e) {
             Log::error('QR Scan Error: '.$e->getMessage());
