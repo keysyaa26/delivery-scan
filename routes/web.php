@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
         ->prefix('waiting-post')
         ->group(function () {
             Route::post('store-scan', 'storeScan')->name('store-scan');
-            Route::post('store-scan-2', 'storeScan2')->name('store-scan');
+            Route::post('store-scan-2', 'storeScan2')->name('store-scan-2');
             Route::get('index', 'index')->name('index');
             Route::get('tes', 'tes')->name('tes');
             Route::get('/data-manifest', 'dataManifest')->name('data-manifest');

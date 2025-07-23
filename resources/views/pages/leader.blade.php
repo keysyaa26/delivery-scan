@@ -163,7 +163,7 @@
 
                     console.time("scannerPost");
                     try {
-                        const response = await fetch('/waiting-post/store-scan-2', {
+                        const response = await fetch("{{ route('waiting-post.store-scan-2') }}", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
