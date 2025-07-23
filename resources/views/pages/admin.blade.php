@@ -129,7 +129,7 @@
 
                     console.time("scannerPost");
                     try {
-                        const response = await fetch('/waiting-post/store-scan', {
+                        const response = await fetch("{{ route ('wp.store-scan') }}", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -177,7 +177,7 @@
 
                 console.log('Script loaded!');
 
-                fetch('/manifest/store-scan', {
+                fetch("{{ route ('po.store-scan') }}", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

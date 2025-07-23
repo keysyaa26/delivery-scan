@@ -45,7 +45,7 @@ class AuthController extends Controller
     public function endSessionCustomer(Request $request)
     {
         $this->forgetSession($request);
-        return redirect()->route('dashboard');
+        return redirect()->route('wp.index');
     }
 
     public function forgetSession(Request $request)
