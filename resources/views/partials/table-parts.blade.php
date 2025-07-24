@@ -3,9 +3,9 @@
                 <table class="table table-bordered table-striped mt-2 table-hover table-sm text-center">
                     <thead class="table-light">
                         <tr>
-                            <th>No</th>
-                            <th>Manifest</th>
+                            <th>Label Customer</th>
                             <th>Job No</th>
+                            <th>Seq No</th>
                             <th>Inv ID</th>
                             <th>Part Name</th>
                             <th>Prepare by Member</th>
@@ -24,10 +24,10 @@
                     @else
                         @foreach ($dataParts as $part )
                         <tr>
-                            <td>{{ $i++ }}</td>
-                            <td>{{ $part->dn_no }}</td>
+                            <td>{{ $part->kbndn_no }}</td>
                             <td>{{ $part->job_no }}</td>
-                            <td>{{ $part->InvId }}</td> {{-- FIX: Added closing </td> here --}}
+                            <td>{{ $part->seq_no }}</td>
+                            <td>{{ $part->InvId }}</td>
                             <td>{{ $part->PartName }}</td>
                             <td>
                                 @if ($part->status_label === 'Close')
@@ -36,7 +36,13 @@
                                     <b>Belum Prepare</b>
                                 @endif
                             </td>
-                            <td>tes</td>
+                            <td>
+                                @if($part->check_leader === null)
+                                    <b>Belum Check</b>
+                                @elseif($part->check_leader === 1)
+                                    <b style="color: red;">Close</b>
+                                @endif
+                            </td>
                         </tr>
                         @endforeach
                     @endif

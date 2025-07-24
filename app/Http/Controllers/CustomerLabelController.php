@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Database\Factories\CustomerFactory;
 
 class CustomerLabelController extends Controller
@@ -31,5 +32,51 @@ class CustomerLabelController extends Controller
                     'message' => 'Data manifest tidak sesuai!'
                 ], 200);
         }
+    }
+
+    public function checkPartData(Request $request) {
+        $request->validate([
+            'parts' => 'required'
+        ]);
+        $customer = strtolower(session('customer'));
+
+        $label = $request->input('parts');
+        $objekCust = CustomerFactory::createCustomerInstance($customer);
+        $checkedLabel = $objekCust->getDataLabel($label);
+        $dataParts = $objekCust->getMasterparts($request->input('manifest'));
+
+        if($checkedLabel) {
+            return response()
+                ->json([
+                    'success' => true,
+                    'message' => 'Label customer sesuai!',
+                    'html' => view('partials.table-parts', compact('dataParts'))->render(),
+                    'data' => $dataParts
+                ], 200);
+        } else {
+            return response()
+                ->json([
+                    'success' => false,
+                    'message' => 'Label customer tidak sesuai!'
+                ], 200);
+        }
+    }
+
+    public function getLabelCust() {
+        $manifest = 'HPM 002024040100';
+
+        $dataLabel = DB::table('tbl_kbndelivery')
+            ->where('dn_no', $manifest)
+            ->select('job_no', 'seq_no', 'invid')
+            ->get();
+
+        $jobNos = $dataLabel->pluck('job_no')->unique();
+        $invIds = $dataLabel->pluck('invid')->unique();
+
+        $hpmData = DB::table('vw_data_hpm')
+            ->where('dn_no', $manifest)
+            ->whereIn('job_no', $jobNos)
+            ->whereIn('InvId', $invIds)
+            ->get();
     }
 }

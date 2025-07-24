@@ -120,4 +120,23 @@ abstract class BaseCustomer extends Model
 
         return $datas;
     }
+
+    public function getDataLabel($labelNo) {
+        $data = DB::table('tbl_kbndelivery')
+            ->where('kbndn_no', $labelNo)
+            ->first();
+
+        $this->checkDataLabel($labelNo, $data ? true : false);
+
+        return $data;
+    }
+
+    public function checkDataLabel($labelNo, $status) {
+        DB::table('tbl_kbndelivery')
+            ->where('kbndn_no', $labelNo)
+            ->update([
+                'check_leader' => $status,
+                'checked_by' => auth()->user()->id_user
+            ]);
+    }
 }

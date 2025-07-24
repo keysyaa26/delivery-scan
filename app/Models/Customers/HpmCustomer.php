@@ -22,10 +22,10 @@ class HpmCustomer extends BaseCustomer
 
     public function getViewTable(): string
     {
-        return 'vw_data_hpm';
+        return 'vw_kbndelivery_hpm';
     }
 
     public function labelCustomer($label) {
-        
+
     }
 }

@@ -130,15 +130,33 @@
 
             async function inputParts() {
                 const parts = document.getElementById('inputParts').value;
+                const manifest = document.getElementById('inputManifest').value;
+                const csrfToken = document.querySelector('input[name="_token"]').value;
 
-                Swal.fire({
-                    title: 'OK!',
-                    text: 'Parts berhasil discan',
-                    icon: 'success',
-                    timer: 2000,
-                    showConfirmButton: false
-                })
-                console.log(parts);
+                    const response = await fetch("{{ route('label.store-scan') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrfToken,
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({
+                            parts: parts,
+                            manifest: manifest
+                        })
+                    });
+                    const data = await response.json();
+                    console.log(data);
+                    // update table
+                    document.getElementById('table-container').innerHTML = data.html;
+
+                    Swal.fire({
+                        title: data.success ? 'OK!' : 'NG!',
+                        text: data.message,
+                        icon: data.success ? 'success' : 'error',
+                        timer: 2000,
+                        showConfirmButton: false
+                    })
             }
 
             async function scanWP () {
