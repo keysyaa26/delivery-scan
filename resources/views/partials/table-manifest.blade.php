@@ -38,7 +38,7 @@
                                 @elseif ($manifest->status === 'OK')
                                     <b style="color: red;">Close</b>
                                 @else
-                                    {{ $item->status }} {{-- Tampilkan status apa adanya jika bukan null, OK, atau NG --}}
+                                    {{ $manifest->status }} {{-- Tampilkan status apa adanya jika bukan null, OK, atau NG --}}
                                 @endif
                             </td>
                         </tr>

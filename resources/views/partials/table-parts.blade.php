@@ -36,7 +36,13 @@
                                     <b>Belum Prepare</b>
                                 @endif
                             </td>
-                            <td>tes</td>
+                            <td>
+                                @if($part->check_leader === null)
+                                    <b>Belum Check</b>
+                                @elseif($part->check_leader === 1)
+                                    <b style="color: red;">Close</b>
+                                @endif
+                            </td>
                         </tr>
                         @endforeach
                     @endif

@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
         ->prefix('customer-label')
         ->group(function () {
             Route::post('parts-data', 'getPartsData')->name('parts-data');
+            Route::post('store-scan', 'checkPartData')->name('store-scan');
     });
 
 });

@@ -34,6 +34,34 @@ class CustomerLabelController extends Controller
         }
     }
 
+    public function checkPartData(Request $request) {
+        $request->validate([
+            'parts' => 'required'
+        ]);
+        $customer = strtolower(session('customer'));
+
+        $label = $request->input('parts');
+        $objekCust = CustomerFactory::createCustomerInstance($customer);
+        $checkedLabel = $objekCust->getDataLabel($label);
+        $dataParts = $objekCust->getMasterparts($request->input('manifest'));
+
+        if($checkedLabel) {
+            return response()
+                ->json([
+                    'success' => true,
+                    'message' => 'Label customer sesuai!',
+                    'html' => view('partials.table-parts', compact('dataParts'))->render(),
+                    'data' => $dataParts
+                ], 200);
+        } else {
+            return response()
+                ->json([
+                    'success' => false,
+                    'message' => 'Label customer tidak sesuai!'
+                ], 200);
+        }
+    }
+
     public function getLabelCust() {
         $manifest = 'HPM 002024040100';
 
