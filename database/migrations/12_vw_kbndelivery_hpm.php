@@ -22,7 +22,9 @@ return new class extends Migration
                 a.InvId,
                 a.PartName,
                 a.status_label,
-            	a.tanggal_order
+            	a.tanggal_order,
+                b.check_leader,
+                b.checked_by
             FROM
                 vw_data_hpm a
             LEFT JOIN

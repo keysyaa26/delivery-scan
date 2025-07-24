@@ -3,63 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ asset('logo-kbi.png') }}">
     <title>{{ $title ?? 'Scan Delivery' }}</title>
 
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Optional Font Awesome (untuk ikon) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-
         <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-    <style>
-
-    </style>
-
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 </head>
 
 <body>
     {{-- NAVBAR --}}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-        <div class="container-fluid">
-            <!-- Brand/Logo -->
-            <a class="navbar-brand" href="#">Delivery</a>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+    <div class="container-fluid position-relative">
+        <!-- Left side: Dashboard link -->
+        <a class="navbar-brand me-auto" href="{{ route('dashboard') }}">
+            <i class="fas fa-home me-1"></i>
+        </a>
 
-            <!-- Hamburger Toggle Button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Navbar Content -->
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <!-- Right Side Profile Dropdown -->
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user-circle me-1"></i> {{ Illuminate\Support\Facades\Auth::user()->full_name }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                            <li>
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+        <!-- Center: Delivery (Always Centered) -->
+        <div class="position-absolute start-50 translate-middle-x text-white fw-bold">
+            DELIVERY SISTEM
         </div>
-    </nav>
+
+        <!-- Hamburger Toggle Button (right on mobile) -->
+        <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Right Side Profile Dropdown -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i> {{ Illuminate\Support\Facades\Auth::user()->full_name }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
 
     {{-- ALERT SESSION DI BAWAH NAVBAR --}}
     @if(session()->has('customer'))
