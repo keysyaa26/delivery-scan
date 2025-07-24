@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Database\Factories\CustomerFactory;
 
 class CustomerLabelController extends Controller
@@ -17,7 +18,7 @@ class CustomerLabelController extends Controller
         $objekCustomer = CustomerFactory::createCustomerInstance($customer);
         $dataParts = $objekCustomer->getMasterparts($manifest);
 
-        if($dataParts) {
+        if($dataParts->count() > 0) {
             return response()
                 ->json([
                     'success' => true,

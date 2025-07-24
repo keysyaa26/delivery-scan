@@ -102,10 +102,12 @@
                     });
 
                     const data = await response.json();
-                    document.getElementById('form3-container').style.display = 'block';
-                    // tampil tabel parts
-                    document.getElementById('table-container').innerHTML = data.html;
                     console.log(data);
+                    if (data.success === true) {
+                        document.getElementById('form3-container').style.display = 'block';
+                        // tampil tabel parts
+                        document.getElementById('table-container').innerHTML = data.html;
+                    }
 
                     Swal.fire({
                         title: data.success ? 'OK!' : 'NG!',
@@ -145,10 +147,11 @@
                             manifest: manifest
                         })
                     });
+
                     const data = await response.json();
-                    console.log(data);
-                    // update table
-                    document.getElementById('table-container').innerHTML = data.html;
+                    if(data.success === true) {
+                        document.getElementById('table-container').innerHTML = data.html;
+                    }
 
                     Swal.fire({
                         title: data.success ? 'OK!' : 'NG!',
