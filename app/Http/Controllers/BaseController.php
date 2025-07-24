@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Database\Factories\CustomerFactory;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 abstract class BaseController extends Controller
 {
@@ -34,7 +35,7 @@ abstract class BaseController extends Controller
         return $customer->checkManifestCustomer($cycle);
     }
 
-        public function dataIndex($date = null)
+    public function dataIndex($date = null)
         {
             // ambil data manifest untuk tabel
             $customer = strtolower(session('customer'));

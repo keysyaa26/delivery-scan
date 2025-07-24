@@ -36,9 +36,7 @@
                                 @if ($manifest->status === null)
                                     <b>Open</b>
                                 @elseif ($manifest->status === 'OK')
-                                    <b style="color: green;">Close</b>
-                                @elseif ($manifest->status === 'NG')
-                                    <b style="color: red;">NG</b>
+                                    <b style="color: red;">Close</b>
                                 @else
                                     {{ $item->status }} {{-- Tampilkan status apa adanya jika bukan null, OK, atau NG --}}
                                 @endif
