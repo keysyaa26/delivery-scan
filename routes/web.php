@@ -22,9 +22,16 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+
     Route::controller(DashboardController::class)
         ->group(function () {
+            // halaman di sidebar
             Route::get('dashboard', 'index')->name('dashboard');
+            Route::get('scan-admin', 'scanAdmin')->name('scanAdmin');
+            Route::get('scan-leader', 'scanLeader')->name('scanLeader');
+
+            Route::get('getAdminCheck', 'getAdminCheck')->name('dataAdmin');
+            Route::get('get-prepare-data', 'getPrepareData')->name('dataPrepare');
     });
 
     Route::controller(ScanWaitingPostController::class)

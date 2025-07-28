@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Database\Factories\CustomerFactory;
+use Carbon\Carbon;
 
 abstract class BaseCustomer extends Model
 {
@@ -138,5 +139,48 @@ abstract class BaseCustomer extends Model
                 'check_leader' => $status,
                 'checked_by' => auth()->user()->id_user
             ]);
+    }
+
+    public function dailyCheck($date = null) {
+        $date = $date ? Carbon::parse($date) : Carbon::today();
+        $formatedDate = $date ->format('d-m-Y');
+
+        $manifests = DB::table($this->vwTblDataHpm())
+            ->where('tanggal_order', $formatedDate)
+            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label')
+            ->get();
+
+        if($manifests->isEmpty()) {
+            return collect([]);
+        }
+
+        $manifestNumber = $manifests->pluck('dn_no')->unique()->values();
+
+        $status = DB::table('tb_input_log')
+            ->whereIn('no_dn', $manifestNumber)
+            ->select('no_dn', 'status')
+            ->get()
+            ->groupBy('no_dn')
+            ->map(function ($logs) {
+                return $logs->first()->status;
+            });
+            // gabungkan data manifest dengan status
+            $data = $manifests->map(function ($manifest) use ($status) {
+                $manifest->status = $status[$manifest->dn_no] ?? null;
+                return $manifest;
+            });
+        return $data;
+    }
+
+    public function getPrepareData($date = null) {
+        $date = $date ? Carbon::parse($date) : Carbon::today();
+        $formatedDate = $date ->format('d-m-Y');
+
+        $manifests = DB::table($this->vwTblDataHpm())
+            ->where('tanggal_order', $formatedDate)
+            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP')
+            ->get();
+
+        return $manifests;
     }
 }

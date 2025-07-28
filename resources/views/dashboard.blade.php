@@ -7,11 +7,21 @@
         <h4 class="fw-bold">Dashboard</h4>
     </div>
 
-    {{-- job --}}
-    <div class="d-flex justify-content-center align-items-center flex-column gap-3" style="min-height: 60vh;">
-        <a href="{{ route('wp.index') }}" class="btn w-100 py-3 rounded-pill shadow-sm" style="background-color: #2759cd;">
-            <b style="color: white">Scan Waiting Post</b>
-        </a>
-    </div>
-</div>
+    @include('partials.card')
+
+<script>
+    function loadSummary() {
+        fetch('/get-prepare-data')
+            .then(response =>response.json())
+            .then(data=> {
+                console.log(data);
+                const result = `${data.totalClosed} / ${data.totalOpen}`;
+                document.getElementById('summaryPrepare').innerHTML = result;
+            })
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadSummary();
+    });
+</script>
 @endsection
