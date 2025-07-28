@@ -25,7 +25,7 @@ class HpmCustomer extends BaseCustomer
         return 'vw_kbndelivery_hpm';
     }
 
-    public function labelCustomer($label) {
-
+    public function vwTblDataHpm() {
+        return 'vw_data_hpm';
     }
 }
