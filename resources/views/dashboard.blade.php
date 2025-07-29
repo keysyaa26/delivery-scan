@@ -11,13 +11,26 @@
 
 <script>
     function loadSummary() {
-        fetch('/get-prepare-data')
+        fetch("{{ route('dataPrepare') }}")
             .then(response =>response.json())
-            .then(data=> {
-                console.log(data);
+            .then(data => {
                 const result = `${data.totalClosed} / ${data.totalOpen}`;
                 document.getElementById('summaryPrepare').innerHTML = result;
             })
+
+        fetch("{{ route('dataAdmin') }}")
+            .then(response => response.json())
+            .then(data => {
+                const result = `${data.totalPlan} / ${data.totalActual}`;
+                document.getElementById('summaryAdmin').innerHTML = result;
+            });
+        fetch("{{ route('dataChecked') }}")
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                const result = `${data.totalPlan} / ${data.totalActual}`;
+                document.getElementById('summaryChecked').innerHTML = result;
+            });
     }
 
     document.addEventListener('DOMContentLoaded', function() {

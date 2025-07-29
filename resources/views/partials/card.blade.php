@@ -40,10 +40,10 @@
 
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 col-sm-12 my-3">
-                <div class="card-box bg-yellow">
+                <div class="card-box bg-grey">
                     <div class="inner">
                         <h6 class="text-center"> SURAT JALAN </h6>
-                        <p>Order (Pcs)</p>
+                        <p> Order (Pcs)</p>
                         <h3 id="summarySJ"> Loading...</h3>
                         <h6 class="text-center">CLOSED</h6>
                     </div>

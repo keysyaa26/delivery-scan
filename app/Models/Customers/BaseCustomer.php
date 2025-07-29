@@ -172,9 +172,9 @@ abstract class BaseCustomer extends Model
         return $data;
     }
 
-    public function getPrepareData($date = null) {
+    public function getTodayManifest($date = null) {
         $date = $date ? Carbon::parse($date) : Carbon::today();
-        $formatedDate = $date ->format('d-m-Y');
+        $formatedDate = $date->format('d-m-Y');
 
         $manifests = DB::table($this->vwTblDataHpm())
             ->where('tanggal_order', $formatedDate)
@@ -182,5 +182,29 @@ abstract class BaseCustomer extends Model
             ->get();
 
         return $manifests;
+    }
+
+    public function dataDashboardChecked($date = null) {
+        $data = $this->getTodayManifest($date);
+        $manifestNumber = $data->pluck('dn_no')->unique()->values();
+        $jobNumber = $data->pluck('job_no')->unique()->values();
+
+        $checkLeader = DB::table('tbl_kbndelivery')
+            ->whereIn('kbndn_no', $manifestNumber)
+            ->whereIn('job_no', $jobNumber)
+            ->select('kbndn_no', 'job_no', 'check_leader')
+            ->get()
+            ->groupBy('kbndn_no')
+            ->map(function ($logs) {
+                return $logs->first()->check_leader;
+            });
+
+        // gabungkan data
+        $datas = $data->map(function ($manifest) use ($checkLeader) {
+            $manifest->check_leader = $checkLeader[$manifest->dn_no] ?? null;
+            return $manifest;
+        });
+
+        return $datas;
     }
 }

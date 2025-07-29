@@ -30,8 +30,9 @@ Route::middleware('auth')->group(function () {
             Route::get('scan-admin', 'scanAdmin')->name('scanAdmin');
             Route::get('scan-leader', 'scanLeader')->name('scanLeader');
 
-            Route::get('getAdminCheck', 'getAdminCheck')->name('dataAdmin');
+            Route::get('get-admin-data', 'getAdminCheck')->name('dataAdmin');
             Route::get('get-prepare-data', 'getPrepareData')->name('dataPrepare');
+            Route::get('get-checked-data', 'getCheckedData')->name('dataChecked');
     });
 
     Route::controller(ScanWaitingPostController::class)
