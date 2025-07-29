@@ -50,4 +50,31 @@ class PoCheckController extends BaseController
 
     }
 
+    public function checkManifestSJ(Request $request) {
+        $request->validate([
+            'manifest' => 'required',
+        ]);
+
+        $manifest = request()->input('manifest');
+        $customer = strtolower(session('customer'));
+        $cycle = session('cycle');
+
+        $customer = CustomerFactory::createCustomerInstance($customer);
+        $result = $customer->checkManifestCustomerSJ($cycle, $manifest);
+
+        if($result) {
+            return response()
+                ->json([
+                    'success' => true,
+                    'message' => 'Data manifest sesuai!',
+                ], 200);
+        } else {
+            return response()
+                ->json([
+                    'success' => false,
+                    'message' => 'Data manifest tidak sesuai!'
+                ], 200);
+        }
+    }
+
 }

@@ -72,4 +72,14 @@ class DashboardController extends Controller
             return redirect()->route('dashboard')->with('error', 'User tidak memiliki akses ke halaman ini.');
         }
     }
+
+    public function checkSuratJalan() {
+        $user = auth()->user();
+
+        if (in_array($user->id_role, ['1', '2'])) {
+            return view('pages.surat-jalan');
+        } else {
+            return redirect()->route('dashboard')->with('error', 'User tidak memiliki akses ke halaman ini.');
+        }
+    }
 }

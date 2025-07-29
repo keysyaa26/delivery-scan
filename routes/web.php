@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
             Route::get('dashboard', 'index')->name('dashboard');
             Route::get('scan-admin', 'scanAdmin')->name('scanAdmin');
             Route::get('scan-leader', 'scanLeader')->name('scanLeader');
+            Route::get('check-surat-jalan', 'checkSuratJalan')->name('checkSuratJalan');
 
             Route::get('get-admin-data', 'getAdminCheck')->name('dataAdmin');
             Route::get('get-prepare-data', 'getPrepareData')->name('dataPrepare');
@@ -44,13 +45,19 @@ Route::middleware('auth')->group(function () {
             Route::get('index', 'index')->name('index');
             Route::get('tes', 'tes')->name('tes');
             Route::get('/data-manifest', 'dataManifest')->name('data-manifest');
-    });
 
-    Route::controller(PoCheckController::class)
+            // untuk surat jalan
+            Route::get('data-table-sj', 'dataTableSJ')->name('data-table-sj');
+        });
+
+        Route::controller(PoCheckController::class)
         ->name('po.')
         ->prefix('manifest')
         ->group(function () {
             Route::post('store-scan', 'processScan')->name('store-scan');
+            
+            // untuk surat jalan
+            Route::post('scan-sj', 'checkManifestSJ')->name('scan-sj');
     });
 
     Route::controller(CustomerLabelController::class)

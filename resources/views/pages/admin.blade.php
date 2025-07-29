@@ -103,7 +103,6 @@
                     })
                     .then(response => response.text())
                     .then(html => {
-                        console.log(html);
                         document.getElementById('table-manifest').innerHTML = html;
                     })
                 });

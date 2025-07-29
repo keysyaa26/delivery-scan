@@ -40,6 +40,42 @@ abstract class BaseCustomer extends Model
         return $manifest;
     }
 
+    public function checkManifestCustomerSJ($cycle, $manifest_id) {
+        $datas = DB::table($this->getTableName())
+                ->where('dn_no', $manifest_id)
+                ->where('cycle', $cycle)
+                ->get();
+        $this->tblSjCheck($manifest_id, $manifest_id ? 1 :0);
+
+        return $datas;
+    }
+
+    public function tblSjCheck($dn, $status) {
+        $data = DB::table('tbl_check_sj')
+            ->where('dn_no', $dn)
+            ->where('table_name', $this->getTableName())
+            ->first();
+
+        if ($data) {
+            DB::table('tbl_check_sj')
+                ->where('dn_no', $dn)
+                ->where('table_name', $this->getTableName())
+                ->update(['check_sj' => $status,
+                    'updated_at' => now(),
+                ]);
+        } else {
+            DB::table('tbl_check_sj')
+                ->insert([
+                    'dn_no' => $dn,
+                    'check_sj' => $status,
+                    'checked_by' => auth()->user()->id_user,
+                    'table_name' => $this->getTableName(),
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+        }
+
+    }
     public function logCheck($manifest_id, $status, $process){
         Log::channel($this->getLogChannel())
             ->info('Check Manifest', [
@@ -206,5 +242,22 @@ abstract class BaseCustomer extends Model
         });
 
         return $datas;
+    }
+
+    public function manifestWithSuratJalan($filteredData) {
+        $manifestNumbers = $filteredData->pluck('dn_no')->unique()->filter()->values();
+        $statuses = DB::table('tbl_check_sj')
+            ->whereIn('dn_no', $manifestNumbers)
+            ->select('dn_no', 'check_sj')
+            ->get()
+            ->groupBy('dn_no')
+            ->map(function ($logs) {
+                return $logs->first()->check_sj;
+            });
+
+        return $filteredData->map(function ($manifest) use ($statuses) {
+            $manifest->check_sj = $statuses[$manifest->dn_no] ?? null;
+            return $manifest;
+        });
     }
 }

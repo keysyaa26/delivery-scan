@@ -90,6 +90,7 @@ class ScanWaitingPostController extends BaseController
                     'success' => true,
                     'message' => 'Scan berhasil!',
                     'html' => view('partials.table-manifest', compact('manifests'))->render(),
+                    'data' => $manifests,
                 ], 200);
         } catch (\Throwable $e) {
             Log::error('QR Scan Error: '.$e->getMessage());
@@ -98,9 +99,29 @@ class ScanWaitingPostController extends BaseController
                 ->json([
                     'success' => false,
                     'message' => 'Terjadi kesalahan di server: ' . $e->getMessage(),
-                ], 500);
+            ], 500);
         }
     }
 
+    public function dataTableSJ(Request $request) {
+        $customer = strtolower(session('customer'));
+        $cycle = session('cycle');
+        $route = session('route');
+        $date = $request->query('date');
 
+        $object = CustomerFactory::createCustomerInstance($customer);
+        $manifests = $object->checkManifestCustomer($cycle, $route);
+        if ($date) {
+                $manifests = $manifests->filter(function ($item) use ($date) {
+                    return Carbon::parse($item->tanggal_order)->toDateString() === $date;
+                });
+            }
+        $statusSJ = $object->manifestWithSuratJalan($manifests);
+
+        return response()->json([
+            'html' => view('partials.table-surat-jalan', ['datas' => $statusSJ])->render(),
+            'success' => true,
+            'data' => $statusSJ
+        ]);
+    }
 }
