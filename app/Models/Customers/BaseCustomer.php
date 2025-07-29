@@ -45,7 +45,11 @@ abstract class BaseCustomer extends Model
                 ->where('dn_no', $manifest_id)
                 ->where('cycle', $cycle)
                 ->get();
-        $this->tblSjCheck($manifest_id, $manifest_id ? 1 :0);
+        if($datas) {
+            $this->tblSjCheck($manifest_id, $datas ? 1 :0);
+        } else {
+            return null;
+        }
 
         return $datas;
     }
@@ -214,7 +218,7 @@ abstract class BaseCustomer extends Model
 
         $manifests = DB::table($this->vwTblDataHpm())
             ->where('tanggal_order', $formatedDate)
-            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP')
+            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label')
             ->get();
 
         return $manifests;

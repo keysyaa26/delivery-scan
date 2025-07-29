@@ -109,19 +109,24 @@ class ScanWaitingPostController extends BaseController
         $route = session('route');
         $date = $request->query('date');
 
-        $object = CustomerFactory::createCustomerInstance($customer);
-        $manifests = $object->checkManifestCustomer($cycle, $route);
-        if ($date) {
-                $manifests = $manifests->filter(function ($item) use ($date) {
-                    return Carbon::parse($item->tanggal_order)->toDateString() === $date;
-                });
-            }
-        $statusSJ = $object->manifestWithSuratJalan($manifests);
+        try {
+            $object = CustomerFactory::createCustomerInstance($customer);
+            $manifests = $object->checkManifestCustomer($cycle, $route);
+            if ($date) {
+                    $manifests = $manifests->filter(function ($item) use ($date) {
+                        return Carbon::parse($item->tanggal_order)->toDateString() === $date;
+                    });
+                }
+            $statusSJ = $object->manifestWithSuratJalan($manifests);
 
-        return response()->json([
-            'html' => view('partials.table-surat-jalan', ['datas' => $statusSJ])->render(),
-            'success' => true,
-            'data' => $statusSJ
-        ]);
+            return response()->json([
+                'html' => view('partials.table-surat-jalan', ['datas' => $statusSJ])->render(),
+                'success' => true,
+                'data' => $statusSJ
+            ]);
+        } catch (\Throwable $e) {
+            Log::error("Error loading data-table-sj: " . $e->getMessage());
+            return response()->json(['error' => 'Server error'], 500);
+        }
     }
 }

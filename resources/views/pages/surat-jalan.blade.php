@@ -112,7 +112,28 @@
         const manifest = document.getElementById('inputManifest').value;
         const csrfToken = document.querySelector('input[name="_token"]').value;
 
-        const response = await fetch("{{ route('po.scan-sj')}}")
+        const response = await fetch("{{ route('po.scan-sj')}}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken,
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                manifest: manifest
+            })
+        });
+        const data = await response.json();
+        Swal.fire({
+            title: data.success ? 'OK!' : 'NG!',
+            text: data.message,
+            icon: data.success ? 'success' : 'error',
+            timer: 2000,
+            showConfirmButton: false
+        });
+        if (data.success) {
+            dataManifest(); // Refresh the manifest table
+        }
     }
 
     async function dataManifest(date = null){
@@ -127,6 +148,7 @@
             }
         });
         const data = await response.json();
+        console.log(data);
         document.getElementById('table-container').innerHTML = data.html;
     }
 

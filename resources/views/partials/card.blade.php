@@ -31,7 +31,7 @@
                         <h6 class="text-center"> CHECKED </h6>
                         <p>Order (Pcs)</p>
                         <h3 id="summaryChecked"> Loading... </h3>
-                        <h6 class="text-center">CLOSED</h6>
+                        <h6 class="text-center">OPEN</h6>
                     </div>
                     <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
@@ -45,7 +45,7 @@
                         <h6 class="text-center"> SURAT JALAN </h6>
                         <p> Order (Pcs)</p>
                         <h3 id="summarySJ"> Loading...</h3>
-                        <h6 class="text-center">CLOSED</h6>
+                        <h6 class="text-center">OPEN</h6>
                     </div>
                     <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
@@ -56,7 +56,7 @@
                         <h6 class="text-center"> LOADING </h6>
                         <p>Order (Pcs)</p>
                         <h3 id="summaryLoading"> Loading... </h3>
-                        <h6 class="text-center">CLOSED</h6>
+                        <h6 class="text-center">OPEN</h6>
                     </div>
                     <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>

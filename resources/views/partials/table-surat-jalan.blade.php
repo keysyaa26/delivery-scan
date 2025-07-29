@@ -31,7 +31,7 @@
                             <td>
                                 @if ($data->check_sj === null)
                                     <b>Open</b>
-                                @elseif ($data->check_sj === '1')
+                                @elseif ($data->check_sj === 1)
                                     <b style="color: red;">Close</b>
                                 @else
                                     <b>Open</b> {{-- Tampilkan status apa adanya jika bukan null, OK, atau NG --}}

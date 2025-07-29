@@ -47,11 +47,14 @@ class DashboardController extends Controller
 
     public function getCheckedData() {
         $objekCustomer = CustomerFactory::createCustomerInstance('hpm');
-        $data = $objekCustomer->dataDashboardChecked('26-07-2025');
+        $data = $objekCustomer->dataDashboardChecked(); //tanggal di sini
+        $data = $data->where('status_label', 'Open');
         $dataPlan = $data->sum('qty_pcs');
         $dataActual = $data->sum(function($item) {
             return $item->QtyPerKbn * $item->countP;
         });
+
+        Log::info($data);
 
         return response()->json([
             'totalPlan' => $dataPlan,

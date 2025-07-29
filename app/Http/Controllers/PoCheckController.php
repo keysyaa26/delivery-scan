@@ -62,7 +62,7 @@ class PoCheckController extends BaseController
         $customer = CustomerFactory::createCustomerInstance($customer);
         $result = $customer->checkManifestCustomerSJ($cycle, $manifest);
 
-        if($result) {
+        if($result->isNotEmpty()) {
             return response()
                 ->json([
                     'success' => true,
