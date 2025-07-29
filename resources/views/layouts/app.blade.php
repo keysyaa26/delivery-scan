@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
-        
+
     </style>
 </head>
 <body>
@@ -26,15 +26,15 @@
             <button class="navbar-toggler sidebar-toggler me-2" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <!-- Brand/logo -->
             <a class="navbar-brand" href="#">DELIVERY SISTEM</a>
-            
+
             <!-- Tombol toggle navbar (muncul di mobile) -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <!-- Menu navbar -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
@@ -58,7 +58,7 @@
             </div>
         </div>
     </nav>
-    
+
     <!-- Sidebar -->
     <div class="sidebar bg-light">
         <div class="sidebar-header p-3 border-bottom">
@@ -81,7 +81,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ route('checkSuratJalan') }}">
                     <i class="fas fa-truck"></i> Check Surat Jalan
                 </a>
             </li>
@@ -92,11 +92,11 @@
             </li>
         </ul>
     </div>
-    
+
     <!-- Overlay untuk sidebar di mobile -->
     <div class="overlay"></div>
 
-    
+
     <!-- Main Content -->
     <main class="py-4 main-content">
 
@@ -121,7 +121,7 @@
             @yield('content')
             <!-- Global Alert Container -->
             <div id="responseAlert" class="alert alert-success d-none text-center mx-4 mt-3"></div>
-    
+
             <!-- SweetAlert2 JS -->
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         </div>
@@ -132,7 +132,7 @@
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Toggle sidebar
@@ -140,19 +140,19 @@
             const sidebarToggler = document.querySelector('.sidebar-toggler');
             const overlay = document.querySelector('.overlay');
             const mainContent = document.querySelector('.main-content');
-            
+
             sidebarToggler.addEventListener('click', function() {
                 sidebar.classList.toggle('active');
                 overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
                 mainContent.classList.toggle('active');
             });
-            
+
             overlay.addEventListener('click', function() {
                 sidebar.classList.remove('active');
                 overlay.style.display = 'none';
                 mainContent.classList.remove('active');
             });
-            
+
             // Di desktop, sidebar selalu aktif
             function handleResize() {
                 if (window.innerWidth >= 992) {
@@ -165,10 +165,10 @@
                     mainContent.classList.remove('active');
                 }
             }
-            
+
             // Jalankan saat pertama kali load
             handleResize();
-            
+
             // Dan saat window di-resize
             window.addEventListener('resize', handleResize);
         });

@@ -40,6 +40,46 @@ abstract class BaseCustomer extends Model
         return $manifest;
     }
 
+    public function checkManifestCustomerSJ($cycle, $manifest_id) {
+        $datas = DB::table($this->getTableName())
+                ->where('dn_no', $manifest_id)
+                ->where('cycle', $cycle)
+                ->get();
+        if($datas) {
+            $this->tblSjCheck($manifest_id, $datas ? 1 :0);
+        } else {
+            return null;
+        }
+
+        return $datas;
+    }
+
+    public function tblSjCheck($dn, $status) {
+        $data = DB::table('tbl_check_sj')
+            ->where('dn_no', $dn)
+            ->where('table_name', $this->getTableName())
+            ->first();
+
+        if ($data) {
+            DB::table('tbl_check_sj')
+                ->where('dn_no', $dn)
+                ->where('table_name', $this->getTableName())
+                ->update(['check_sj' => $status,
+                    'updated_at' => now(),
+                ]);
+        } else {
+            DB::table('tbl_check_sj')
+                ->insert([
+                    'dn_no' => $dn,
+                    'check_sj' => $status,
+                    'checked_by' => auth()->user()->id_user,
+                    'table_name' => $this->getTableName(),
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+        }
+
+    }
     public function logCheck($manifest_id, $status, $process){
         Log::channel($this->getLogChannel())
             ->info('Check Manifest', [
@@ -172,15 +212,56 @@ abstract class BaseCustomer extends Model
         return $data;
     }
 
-    public function getPrepareData($date = null) {
+    public function getTodayManifest($date = null) {
         $date = $date ? Carbon::parse($date) : Carbon::today();
-        $formatedDate = $date ->format('d-m-Y');
+        $formatedDate = $date->format('d-m-Y');
 
         $manifests = DB::table($this->vwTblDataHpm())
             ->where('tanggal_order', $formatedDate)
-            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP')
+            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label')
             ->get();
 
         return $manifests;
+    }
+
+    public function dataDashboardChecked($date = null) {
+        $data = $this->getTodayManifest($date);
+        $manifestNumber = $data->pluck('dn_no')->unique()->values();
+        $jobNumber = $data->pluck('job_no')->unique()->values();
+
+        $checkLeader = DB::table('tbl_kbndelivery')
+            ->whereIn('kbndn_no', $manifestNumber)
+            ->whereIn('job_no', $jobNumber)
+            ->select('kbndn_no', 'job_no', 'check_leader')
+            ->get()
+            ->groupBy('kbndn_no')
+            ->map(function ($logs) {
+                return $logs->first()->check_leader;
+            });
+
+        // gabungkan data
+        $datas = $data->map(function ($manifest) use ($checkLeader) {
+            $manifest->check_leader = $checkLeader[$manifest->dn_no] ?? null;
+            return $manifest;
+        });
+
+        return $datas;
+    }
+
+    public function manifestWithSuratJalan($filteredData) {
+        $manifestNumbers = $filteredData->pluck('dn_no')->unique()->filter()->values();
+        $statuses = DB::table('tbl_check_sj')
+            ->whereIn('dn_no', $manifestNumbers)
+            ->select('dn_no', 'check_sj')
+            ->get()
+            ->groupBy('dn_no')
+            ->map(function ($logs) {
+                return $logs->first()->check_sj;
+            });
+
+        return $filteredData->map(function ($manifest) use ($statuses) {
+            $manifest->check_sj = $statuses[$manifest->dn_no] ?? null;
+            return $manifest;
+        });
     }
 }

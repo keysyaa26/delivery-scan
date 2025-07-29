@@ -80,4 +80,5 @@ class CustomerLabelController extends Controller
             ->whereIn('InvId', $invIds)
             ->get();
     }
+
 }
