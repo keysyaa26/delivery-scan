@@ -9,6 +9,12 @@
 
     @include('partials.card')
 
+    @if(session('error'))
+    <script>
+        alert('{{ session('error') }}');
+    </script>
+    @endif
+
 <script>
     function loadSummary() {
         fetch("{{ route('dataPrepare') }}")
