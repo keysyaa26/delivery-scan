@@ -6,7 +6,7 @@
         <div class="card-body">
             <h5 class="card-title">Detail Transaksi</h5>
 
-            @if(request()->is('view-more-admin'))
+            @if(request()->is('view-more-admin') )
                 @include('partials.transaksi.admin', ['data' => $dataAdmin])
             @elseif(request()->is('view-more-prepare'))
                 @include('partials.transaksi.prepare', ['data' => $dataPrepare])

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TblUser;
+use App\Services\DashboardServices;
 use Database\Factories\CustomerFactory;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
@@ -16,49 +17,101 @@ class DashboardController extends Controller
         return view('dashboard');
     }
 
-    public function getAdminCheck() {
-        $objekCustomer = CustomerFactory::createCustomerInstance('hpm');
-        $data = $objekCustomer->dailyCheck(); //tanggal di sini
-        $dataActual = $data->where('status_label', 'Close');
-        $totalPlan = $data->sum('qty_pcs');
-        $totalActual = $dataActual->sum(function($item) {
-            return $item->QtyPerKbn * $item->countP;
-        });
+    public function getAdminCheck(Request $request, DashboardServices $dashboardServices) {
+        $filters = [
+            'status_label' => 'Close',
+            'tanggal_order' => '31-12-2024' //tanggal ganti
+        ];
+        $dataChecked = $dashboardServices->cardAdmin($filters);
 
         return response()->json([
-            'totalPlan' => $totalPlan,
-            'totalActual' => $totalActual,
+            'totalPlan' => $dataChecked['totalPlan'] ?? 0,
+            'totalActual' => $dataChecked['totalActual'] ?? 0
         ]);
     }
 
-    public function getPrepareData() {
-        $objekCustomer = CustomerFactory::createCustomerInstance('hpm');
-        $data = $objekCustomer->dailyCheck(); //tanggal di sini
-        $dataOpen = $data->where('status_label', 'Open');
-        $dataClosed = $data->where('status_label', 'Close');
-        $totalOpen = $dataOpen->sum('qty_pcs');
-        $totalClosed = $dataClosed->sum('qty_pcs');
+    public function viewMoreAdmin(Request $request, DashboardServices $dashboardServices) {
+        $filters = [
+            'status_label' => 'Close',
+            'tanggal_order' => '31-12-2024' //tanggal ganti
+        ];
+        $dataAdmin = $dashboardServices->cardAdmin($filters);
+
+        if(empty($dataAdmin)) {
+            return view('pages.view-more-admin', compact('dataAdmin'));
+        }
+        $dataAdmin = $dataAdmin['data'];
+
+        return view('pages.view-more-admin', compact('dataAdmin'));
+    }
+
+    public function getPrepareData(Request $request, DashboardServices $dashboardServices) {
+        $dataOpen = $dashboardServices->cardPrepare([
+            'status_label' => 'Open',
+            'tanggal_order' => '31-12-2024'
+        ]);
+
+        $dataClose = $dashboardServices->cardPrepare([
+            'status_label' => 'Close',
+            'tanggal_order' => '31-12-2024'
+        ]);
 
         return response()->json([
-            'totalOpen' => $totalOpen,
-            'totalClosed' => $totalClosed,
+            'totalOpen' => $dataOpen['totalData'] ?? 0,
+            'totalClosed' => $dataClose['totalData'] ?? 0
         ]);
     }
 
-    public function getCheckedData() {
-        $objekCustomer = CustomerFactory::createCustomerInstance('hpm');
-        $data = $objekCustomer->dataDashboardChecked(); //tanggal di sini
-        $data = $data->where('status_label', 'Open');
-        $dataPlan = $data->sum('qty_pcs');
-        $dataActual = $data->sum(function($item) {
-            return $item->QtyPerKbn * $item->countP;
-        });
+    public function viewMorePrepare(Request $request, DashboardServices $dashboardServices) {
+        $filters = [
+            'tanggal_order' => '31-12-2024'
+        ];
 
-        Log::info($data);
+        $dataPrepare = $dashboardServices->dataToday($filters);
+
+        return view('pages.view-more-admin', compact('dataPrepare'));
+
+
+    }
+
+    public function getCheckedData(Request $request, DashboardServices $dashboardServices) {
+        $filters = [
+            'status_label' => 'Open',
+            'tanggal_order' => '31-12-2024' //tanggal ganti
+        ];
+        $dataChecked = $dashboardServices->cardChecked($filters);
 
         return response()->json([
-            'totalPlan' => $dataPlan,
-            'totalActual' => $dataActual,
+            'totalPlan' => $dataChecked['totalPlan'] ?? 0,
+            'totalActual' => $dataChecked['totalActual'] ?? 0
+        ]);
+    }
+    public function viewMoreChecked (Request $request, DashboardServices $dashboardServices){
+        $filters = [
+            'status_label' => 'Open',
+            'tanggal_order' => '31-12-2024' //tanggal ganti
+        ];
+        $dataChecked = $dashboardServices->cardChecked($filters);
+        if(empty($dataChecked)) {
+            return view('pages.view-more-admin', compact('dataChecked'));
+        }
+        $dataChecked = $dataChecked['data'];
+
+        return view('pages.view-more-admin', compact('dataChecked'));
+    }
+
+    public function getSJData(Request $request, DashboardServices $dashboardServices) {
+        $filters = [
+            'status_label' => 'Open',
+            'tanggal_order' => '31-12-2024' //tanggal ganti
+        ];
+        $dataChecked = $dashboardServices->cardSuratJalan($filters);
+
+        dd($dataChecked);
+
+        return response()->json([
+            'totalPlan' => $dataChecked['totalPlan'] ?? 0,
+            'totalActual' => $dataChecked['totalActual'] ?? 0
         ]);
     }
 
@@ -96,25 +149,13 @@ class DashboardController extends Controller
         }
     }
 
-    public function viewMoreAdmin() {
-        $objekCustomer = CustomerFactory::createCustomerInstance('hpm');
-        $data = $objekCustomer->dailyCheck('26-07-2025'); //tanggal di sini
-        $dataAdmin = $data->where('status_label', 'Close');
+    public function tes(Request $request, DashboardServices $dashboardServices) {
+        $filters = [
+            'status_label' => 'Open',
+            'tanggal_order' => '31-12-2024'
+        ];
+        $dataChecked = $dashboardServices->cardAdmin($filters);
 
-        return view('pages.view-more-admin', compact('dataAdmin'));
-    }
-
-    public function viewMorePrepare() {
-        $objekCustomer = CustomerFactory::createCustomerInstance('hpm');
-        $dataPrepare = $objekCustomer->dailyCheck('26-07-2025'); //tanggal di sini
-        return view('pages.view-more-admin', compact('dataPrepare'));
-    }
-
-    public function viewMoreChecked() {
-        $objekCustomer = CustomerFactory::createCustomerInstance('hpm');
-        $data = $objekCustomer->dataDashboardChecked('26-07-2025'); //tanggal di sini
-        $dataChecked = $data->where('status_label', 'Open');
-
-        return view('pages.view-more-admin', compact('dataChecked'));
+        dd($dataChecked); // For debugging purposes, remove in production
     }
 }

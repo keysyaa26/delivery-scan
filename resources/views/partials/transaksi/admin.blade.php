@@ -4,6 +4,7 @@
                 <tr>
                     <th>No</th>
                     <th>Tanggal</th>
+                    <th>Customer</th>
                     <th>Manifest</th>
                     <th>Job No</th>
                     <th>Cycle</th>
@@ -22,13 +23,14 @@
 
                 @if(empty($data))
                     <tr>
-                        <td colspan="4" class="text-center">Tidak ada data</td>
+                        <td colspan="12" class="text-center">Tidak ada data</td>
                     </tr>
                 @else
                     @foreach ($data as $d )
                     <tr>
                         <td>{{$i++}}</td>
                         <td>{{$d->tanggal_order}}</td>
+                        <td>{{$d->customer}}</td>
                         <td>{{$d->dn_no}}</td>
                         <td>{{$d->job_no}}</td>
                         <td>{{$d->cycle}}</td>

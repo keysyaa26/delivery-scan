@@ -36,11 +36,13 @@ Route::middleware('auth')->group(function () {
             Route::get('get-admin-data', 'getAdminCheck')->name('dataAdmin');
             Route::get('get-prepare-data', 'getPrepareData')->name('dataPrepare');
             Route::get('get-checked-data', 'getCheckedData')->name('dataChecked');
+            Route::get('get-sj-data', 'getSJData')->name('dataSJ');
 
             // view more
             Route::get('view-more-admin', 'viewMoreAdmin')->name('viewMoreAdmin');
             Route::get('view-more-prepare', 'viewMorePrepare')->name('viewMorePrepare');
             Route::get('view-more-checked', 'viewMoreChecked')->name('viewMoreChecked');
+            Route::get('tes', 'tes')->name('tes'); // For testing purposes
     });
 
     Route::controller(ScanWaitingPostController::class)
