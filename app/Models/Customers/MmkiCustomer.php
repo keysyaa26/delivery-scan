@@ -21,8 +21,13 @@ class MmkiCustomer extends BaseCustomer
         return 'masterpart_mmki';
     }
 
-    public function getViewTable(): string
+    public function vwTblData(): string
     {
         return 'vw_data_mmki';
+    }
+
+    public function getViewTable(): string
+    {
+        return 'vw_kbndelivery_mmki';
     }
 }

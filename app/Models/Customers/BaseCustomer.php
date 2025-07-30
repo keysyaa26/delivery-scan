@@ -17,6 +17,7 @@ abstract class BaseCustomer extends Model
     abstract protected function getLogChannel(): string;
     abstract public function getTableMasterparts(): string;
     abstract public function getViewTable(): string;
+    abstract public function vwTblData(): string;
 
     // ambil data manifest pada cycle yg ditentukan
     public function checkManifestCustomer($cycle, $route) {
@@ -224,7 +225,7 @@ abstract class BaseCustomer extends Model
         $date = $date ? Carbon::parse($date) : Carbon::today();
         $formatedDate = $date ->format('d-m-Y');
 
-        $manifests = DB::table($this->vwTblDataHpm())
+        $manifests = DB::table($this->vwTblData())
             ->where('tanggal_order', $formatedDate)
             ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label', 'cycle', 'customerpart_no')
             ->get();
@@ -255,7 +256,7 @@ abstract class BaseCustomer extends Model
         $date = $date ? Carbon::parse($date) : Carbon::today();
         $formatedDate = $date->format('d-m-Y');
 
-        $manifests = DB::table($this->vwTblDataHpm())
+        $manifests = DB::table($this->vwTblData())
             ->where('tanggal_order', $formatedDate)
             ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label', 'cycle', 'customerpart_no' )
             ->get();

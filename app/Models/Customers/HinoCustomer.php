@@ -22,8 +22,13 @@ class HinoCustomer extends BaseCustomer
             return 'masterpart_hino';
         }
 
-    public function getViewTable(): string
+    public function vwTblData(): string
     {
         return 'vw_data_hino';
+    }
+
+    public function getViewTable(): string
+    {
+        return 'vw_kbndelivery_hino';
     }
 }

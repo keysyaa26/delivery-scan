@@ -21,8 +21,13 @@ class TmminCustomer extends BaseCustomer
         return 'masterpart_tmmin';
     }
 
-    public function getViewTable(): string
+    public function vwTblData(): string
     {
         return 'vw_data_tmmin';
+    }
+
+    public function getViewTable(): string
+    {
+        return 'vw_kbndelivery_tmmin';
     }
 }
