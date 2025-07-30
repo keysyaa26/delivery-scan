@@ -2,6 +2,7 @@
 
 namespace App\Models\Customers;
 
+use App\Models\TblKbndelivery;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -187,7 +188,7 @@ abstract class BaseCustomer extends Model
 
         $manifests = DB::table($this->vwTblDataHpm())
             ->where('tanggal_order', $formatedDate)
-            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label')
+            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label', 'cycle', 'customerpart_no')
             ->get();
 
         if($manifests->isEmpty()) {
@@ -218,7 +219,7 @@ abstract class BaseCustomer extends Model
 
         $manifests = DB::table($this->vwTblDataHpm())
             ->where('tanggal_order', $formatedDate)
-            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label')
+            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label', 'cycle', 'customerpart_no' )
             ->get();
 
         return $manifests;
@@ -229,10 +230,11 @@ abstract class BaseCustomer extends Model
         $manifestNumber = $data->pluck('dn_no')->unique()->values();
         $jobNumber = $data->pluck('job_no')->unique()->values();
 
-        $checkLeader = DB::table('tbl_kbndelivery')
+        $checkLeader = TblKbndelivery::query()
             ->whereIn('kbndn_no', $manifestNumber)
             ->whereIn('job_no', $jobNumber)
-            ->select('kbndn_no', 'job_no', 'check_leader')
+            ->select('kbndn_no', 'job_no', 'check_leader', 'checked_by')
+            ->with('checker')
             ->get()
             ->groupBy('kbndn_no')
             ->map(function ($logs) {
@@ -242,6 +244,7 @@ abstract class BaseCustomer extends Model
         // gabungkan data
         $datas = $data->map(function ($manifest) use ($checkLeader) {
             $manifest->check_leader = $checkLeader[$manifest->dn_no] ?? null;
+            $manifest->checked_by = $checkLeader[$manifest->dn_no] ?? null;
             return $manifest;
         });
 

@@ -31,9 +31,15 @@ Route::middleware('auth')->group(function () {
             Route::get('scan-leader', 'scanLeader')->name('scanLeader');
             Route::get('check-surat-jalan', 'checkSuratJalan')->name('checkSuratJalan');
 
+            // cards data
             Route::get('get-admin-data', 'getAdminCheck')->name('dataAdmin');
             Route::get('get-prepare-data', 'getPrepareData')->name('dataPrepare');
             Route::get('get-checked-data', 'getCheckedData')->name('dataChecked');
+
+            // view more
+            Route::get('view-more-admin', 'viewMoreAdmin')->name('viewMoreAdmin');
+            Route::get('view-more-prepare', 'viewMorePrepare')->name('viewMorePrepare');
+            Route::get('view-more-checked', 'viewMoreChecked')->name('viewMoreChecked');
     });
 
     Route::controller(ScanWaitingPostController::class)
@@ -55,7 +61,7 @@ Route::middleware('auth')->group(function () {
         ->prefix('manifest')
         ->group(function () {
             Route::post('store-scan', 'processScan')->name('store-scan');
-            
+
             // untuk surat jalan
             Route::post('scan-sj', 'checkManifestSJ')->name('scan-sj');
     });

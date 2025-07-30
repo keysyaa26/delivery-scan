@@ -10,7 +10,7 @@
                         <h3 id="summaryAdmin"> Loading...</h3>
                         <h6 class="text-center">CLOSED</h6>
                     </div>
-                    <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('viewMoreAdmin') }}" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
 
@@ -22,7 +22,7 @@
                         <h3 id="summaryPrepare"> Loading... </h3>
                         <h6 class="text-center">PROGRESS</h6>
                     </div>
-                    <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('viewMorePrepare') }}" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 my-3">
@@ -33,7 +33,7 @@
                         <h3 id="summaryChecked"> Loading... </h3>
                         <h6 class="text-center">OPEN</h6>
                     </div>
-                    <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('viewMoreChecked')}}" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         </div>

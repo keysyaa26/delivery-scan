@@ -85,4 +85,26 @@ class DashboardController extends Controller
             return redirect()->route('dashboard')->with('error', 'User tidak memiliki akses ke halaman ini.');
         }
     }
+
+    public function viewMoreAdmin() {
+        $objekCustomer = CustomerFactory::createCustomerInstance('hpm');
+        $data = $objekCustomer->dailyCheck('26-07-2025'); //tanggal di sini
+        $dataAdmin = $data->where('status_label', 'Close');
+
+        return view('pages.view-more-admin', compact('dataAdmin'));
+    }
+
+    public function viewMorePrepare() {
+        $objekCustomer = CustomerFactory::createCustomerInstance('hpm');
+        $dataPrepare = $objekCustomer->dailyCheck('26-07-2025'); //tanggal di sini
+        return view('pages.view-more-admin', compact('dataPrepare'));
+    }
+
+    public function viewMoreChecked() {
+        $objekCustomer = CustomerFactory::createCustomerInstance('hpm');
+        $data = $objekCustomer->dataDashboardChecked('26-07-2025'); //tanggal di sini
+        $dataChecked = $data->where('status_label', 'Open');
+
+        return view('pages.view-more-admin', compact('dataChecked'));
+    }
 }
