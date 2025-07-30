@@ -70,6 +70,7 @@
         const cycle = document.getElementById('inputCycle').value;
         const route = document.getElementById('inputRoute').value;
         const csrfToken = document.querySelector('input[name="_token"]').value;
+        let selectedDate = null;
 
         try{
             const response = await fetch("{{ route ('wp.store-scan-2') }}", {
@@ -97,6 +98,7 @@
 
             if (data.success) {
                 document.getElementById('form2-container').style.display = 'block';
+                dataManifest(selectedDate); // Refresh the manifest table
             }
         } catch (error) {
             console.error('Error:', error);
@@ -132,7 +134,7 @@
             showConfirmButton: false
         });
         if (data.success) {
-            dataManifest(); // Refresh the manifest table
+            dataManifest(selectedDate); // Refresh the manifest table
         }
     }
 
@@ -148,15 +150,14 @@
             }
         });
         const data = await response.json();
-        console.log(data);
         document.getElementById('table-container').innerHTML = data.html;
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        dataManifest();
+        dataManifest(selectedDate);
     });
     document.getElementById('dateInput').addEventListener('change', function() {
-        const selectedDate = this.value;
+        selectedDate = this.value;
         dataManifest(selectedDate);
     });
 </script>

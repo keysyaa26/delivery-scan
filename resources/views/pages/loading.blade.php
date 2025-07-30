@@ -52,6 +52,7 @@
     document.getElementById('inputCycle').addEventListener('keydown', handleEnter);
     document.getElementById('inputRoute').addEventListener('keydown', handleEnter);
     document.getElementById('inputManifest').addEventListener('keydown', handleEnter);
+    let selectedDate = null;
 
     async function handleEnter(e) {
         if (e.key === 'Enter') {
@@ -97,7 +98,7 @@
 
             if (data.success) {
                 document.getElementById('form2-container').style.display = 'block';
-                dataManifest();
+                dataManifest(selectedDate);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -136,7 +137,7 @@
         });
 
         if (data.success) {
-            dataManifest(); // Refresh the manifest table
+            dataManifest(selectedDate); // Refresh the manifest table
         }
 
     }
@@ -153,15 +154,14 @@
             }
         });
         const data = await response.json();
-        console.log(data);
         document.getElementById('table-container').innerHTML = data.html;
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        dataManifest();
+        dataManifest(selectedDate);
     });
     document.getElementById('dateInput').addEventListener('change', function() {
-        const selectedDate = this.value;
+        selectedDate = this.value;
         dataManifest(selectedDate);
     });
 </script>
