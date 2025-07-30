@@ -9,6 +9,10 @@
                             <th>Job No</th>
                             <th>Cycle</th>
                             <th>Check Surat Jalan</th>
+
+                            @if(request('loading') == 'true')
+                                <th>Check Loading</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -37,6 +41,19 @@
                                     <b>Open</b> {{-- Tampilkan status apa adanya jika bukan null, OK, atau NG --}}
                                 @endif
                             </td>
+
+                            @if(request('loading') == 'true')
+                                <td>
+                                    @if ($data->check_loading === null)
+                                        <b>Open</b>
+                                    @elseif ($data->check_loading === 1)
+                                        <b style="color: red;">Close</b>
+                                    @else
+                                        <b>Open</b> {{-- Tampilkan status apa adanya jika bukan null, OK, atau NG --}}
+                                    @endif
+                                </td>
+                            @endif
+
                         </tr>
                         @endforeach
                     @endif

@@ -86,6 +86,16 @@ class DashboardController extends Controller
         }
     }
 
+    public function checkLoading() {
+        $user = auth()->user();
+
+        if (in_array($user->id_role, ['1', '2'])) {
+            return view('pages.loading');
+        } else {
+            return redirect()->route('dashboard')->with('error', 'User tidak memiliki akses ke halaman ini.');
+        }
+    }
+
     public function viewMoreAdmin() {
         $objekCustomer = CustomerFactory::createCustomerInstance('hpm');
         $data = $objekCustomer->dailyCheck('26-07-2025'); //tanggal di sini

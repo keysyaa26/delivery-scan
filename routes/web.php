@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
             Route::get('scan-admin', 'scanAdmin')->name('scanAdmin');
             Route::get('scan-leader', 'scanLeader')->name('scanLeader');
             Route::get('check-surat-jalan', 'checkSuratJalan')->name('checkSuratJalan');
+            Route::get('loading', 'checkLoading')->name('checkLoading');
 
             // cards data
             Route::get('get-admin-data', 'getAdminCheck')->name('dataAdmin');
@@ -64,6 +65,7 @@ Route::middleware('auth')->group(function () {
 
             // untuk surat jalan
             Route::post('scan-sj', 'checkManifestSJ')->name('scan-sj');
+            Route::post('scan-loading', 'checkLoading')->name('scan-loading');
     });
 
     Route::controller(CustomerLabelController::class)
