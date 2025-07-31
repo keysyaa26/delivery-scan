@@ -9,7 +9,19 @@
 <div class="container mt-4">
 <div class="card">
     <div class="card-body">
-        <h4 class="mb-4">Data Waiting Post</h4>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-6">
+                <h4 class="mb-3 mb-md-0">Data Waiting Post</h4>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <form action="{{ route('scan.end-session') }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        Reset WP
+                    </button>
+                </form>
+            </div>
+        </div>
 
         {{-- form tanggal --}}
         <form action="{{route('wp.index')}}" method="GET" id="dateForm">

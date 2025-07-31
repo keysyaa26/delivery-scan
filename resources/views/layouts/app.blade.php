@@ -108,12 +108,6 @@
             📋{{ session('route') ?? '-'}},
             🔄{{ session('cycle') ?? '-'}}
         </div>
-        <form action="{{ route('scan.end-session') }}" method="POST" class="d-inline">
-            @csrf
-            <button type="submit" class="btn btn-sm btn-danger">
-                Reset
-            </button>
-        </form>
     </div>
     @endif
 

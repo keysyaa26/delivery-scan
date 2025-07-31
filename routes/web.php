@@ -83,5 +83,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/coba-label', [CustomerLabelController::class, 'getLabelCust']);
+Route::get('tes-scan', function () {
+    return view('pages.scan');
+})
 
 ?>
