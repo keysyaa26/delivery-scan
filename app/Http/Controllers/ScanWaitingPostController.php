@@ -68,6 +68,7 @@ class ScanWaitingPostController extends BaseController
     }
 
     public function storeScan2(Request $request) {
+        Log::info('Request received:', $request->all());
         $this->validate($request, [
             'customer' => 'required',
             'cycle' => 'required',

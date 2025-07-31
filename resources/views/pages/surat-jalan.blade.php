@@ -48,8 +48,6 @@
             </div>
         </form>
 
-
-
         <div id="form2-container" style="display:none;">
             @include('partials.input-manifest')
 
