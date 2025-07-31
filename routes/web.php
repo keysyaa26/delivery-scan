@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
             Route::get('view-more-admin', 'viewMoreAdmin')->name('viewMoreAdmin');
             Route::get('view-more-prepare', 'viewMorePrepare')->name('viewMorePrepare');
             Route::get('view-more-checked', 'viewMoreChecked')->name('viewMoreChecked');
+            Route::get('view-more-sj', 'viewMoreSJ')->name('viewMoreSJ');
+            Route::get('view-more-loading', 'viewMoreSJ')->name('viewMoreLoading');
             Route::get('tes', 'tes')->name('tes'); // For testing purposes
     });
 

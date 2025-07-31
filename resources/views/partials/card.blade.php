@@ -47,7 +47,7 @@
                         <h3 id="summarySJ"> - </h3>
                         <h6 class="text-center">OPEN</h6>
                     </div>
-                    <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('viewMoreSJ') }}" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 my-3">
@@ -58,7 +58,7 @@
                         <h3 id="summaryLoading"> - </h3>
                         <h6 class="text-center">OPEN</h6>
                     </div>
-                    <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('viewMoreSJ') }}?loading=true" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         </div>

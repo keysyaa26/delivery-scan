@@ -107,12 +107,25 @@ class DashboardController extends Controller
         ];
         $dataChecked = $dashboardServices->cardSuratJalan($filters);
 
-        dd($dataChecked);
-
         return response()->json([
             'totalPlan' => $dataChecked['totalPlan'] ?? 0,
             'totalActual' => $dataChecked['totalActual'] ?? 0
         ]);
+    }
+
+    public function viewMoreSJ(Request $request, DashboardServices $dashboardServices) {
+        $filters = [
+            'status_label' => 'Open',
+            'tanggal_order' => '31-12-2024' //tanggal ganti
+        ];
+        $dataSJ = $dashboardServices->cardSuratJalan($filters);
+        if(empty($dataSJ)) {
+            return view('pages.view-more-admin', compact('dataSJ'));
+        }
+        $dataSJ = $dataSJ['data'];
+
+        return view('pages.view-more-admin', compact('dataSJ'));
+
     }
 
     public function scanAdmin() {

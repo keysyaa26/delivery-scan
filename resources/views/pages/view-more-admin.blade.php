@@ -12,6 +12,10 @@
                 @include('partials.transaksi.prepare', ['data' => $dataPrepare])
             @elseif(request()->is('view-more-checked'))
                 @include('partials.transaksi.checked', ['data' => $dataChecked])
+            @elseif(request()->is('view-more-sj'))
+                @include('partials.transaksi.surat-jalan', ['data' => $dataSJ])
+            @elseif(request()->is('view-more-loading'))
+                @include('partials.transaksi.surat-jalan', ['data' => $dataSJ])
             @endif
         </div>
     </div>
