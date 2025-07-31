@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class TblKbndelivery
- * 
+ *
  * @property int $no
  * @property string $kbndn_no
  * @property string $dn_no
@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $datetime_input
  * @property int|null $user
  * @property string $invid
- * 
+ *
  * @property TblUser|null $tbl_user
  *
  * @package App\Models
@@ -45,11 +45,19 @@ class TblKbndelivery extends Model
 		'kbicode',
 		'datetime_input',
 		'user',
-		'invid'
+		'invid',
+        'check_leader',
+        'checked_by',
+        'checked_at'
 	];
 
 	public function tbl_user()
 	{
 		return $this->belongsTo(TblUser::class, 'user');
 	}
+
+    public function checker()
+    {
+        return $this->belongsTo(TblUser::class, 'checked_by');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CheckSuratJalan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Database\Factories\CustomerFactory;
@@ -77,4 +78,40 @@ class PoCheckController extends BaseController
         }
     }
 
+    public function checkLoading(Request $request) {
+        $request->validate([
+            'manifest' => 'required',
+        ]);
+        $manifest = request()->input('manifest');
+        $customer = strtolower(session('customer'));
+        $cycle = session('cycle');
+
+        $customer = CustomerFactory::createCustomerInstance($customer);
+
+        // check scan surat jalan
+        $scanSJ = CheckSuratJalan::where('dn_no', $manifest)->first();
+
+        if(is_null($scanSJ)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Belum Scan Surat Jalan!'
+            ], 200);
+        }
+
+        $result = $customer->checkManifestLoading($manifest, $cycle);
+
+        if($result) {
+            return response()
+                ->json([
+                    'success' => true,
+                    'message' => 'Data loading berhasil scan!',
+                ], 200);
+        } else {
+            return response()
+                ->json([
+                    'success' => false,
+                    'message' => 'Data loading tidak sesuai!'
+                ], 200);
+        }
+    }
 }

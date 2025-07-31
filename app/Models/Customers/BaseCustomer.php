@@ -2,6 +2,7 @@
 
 namespace App\Models\Customers;
 
+use App\Models\TblKbndelivery;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -16,6 +17,7 @@ abstract class BaseCustomer extends Model
     abstract protected function getLogChannel(): string;
     abstract public function getTableMasterparts(): string;
     abstract public function getViewTable(): string;
+    abstract public function vwTblData(): string;
 
     // ambil data manifest pada cycle yg ditentukan
     public function checkManifestCustomer($cycle, $route) {
@@ -50,8 +52,46 @@ abstract class BaseCustomer extends Model
         } else {
             return null;
         }
-
         return $datas;
+    }
+
+    public function checkManifestLoading($manifest_id, $cycle) {
+        $datas = DB::table($this->getTableName())
+                ->where('dn_no', $manifest_id)
+                ->where('cycle', $cycle)
+                ->get();
+
+        if($datas) {
+            $this->tblCheckLoading($manifest_id, $datas ? 1 : 0);
+        } else {
+            return null;
+        }
+        return $datas;
+    }
+
+    public function tblCheckLoading($dn, $status) {
+        $data = DB::table('tbl_check_sj')
+            ->where('dn_no', $dn)
+            ->where('table_name', $this->getTableName())
+            ->first();
+
+        if ($data) {
+            DB::table('tbl_check_sj')
+                ->where('dn_no', $dn)
+                ->where('table_name', $this->getTableName())
+                ->update(['check_loading' => $status,
+                    'updated_at' => now(),
+            ]);
+        } else {
+            DB::table('tbl_check_sj')
+                ->insert([
+                    'dn_no' => $dn,
+                    'check_loading' => $status,
+                    'table_name' => $this->getTableName(),
+                    'created_at' => now(),
+                    'updated_at' => now()
+            ]);
+        }
     }
 
     public function tblSjCheck($dn, $status) {
@@ -185,9 +225,9 @@ abstract class BaseCustomer extends Model
         $date = $date ? Carbon::parse($date) : Carbon::today();
         $formatedDate = $date ->format('d-m-Y');
 
-        $manifests = DB::table($this->vwTblDataHpm())
+        $manifests = DB::table($this->vwTblData())
             ->where('tanggal_order', $formatedDate)
-            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label')
+            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label', 'cycle', 'customerpart_no')
             ->get();
 
         if($manifests->isEmpty()) {
@@ -216,9 +256,9 @@ abstract class BaseCustomer extends Model
         $date = $date ? Carbon::parse($date) : Carbon::today();
         $formatedDate = $date->format('d-m-Y');
 
-        $manifests = DB::table($this->vwTblDataHpm())
+        $manifests = DB::table($this->vwTblData())
             ->where('tanggal_order', $formatedDate)
-            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label')
+            ->select('dn_no', 'job_no', 'tanggal_order', 'qty_pcs', 'QtyPerKbn', 'sequence', 'countP', 'status_label', 'cycle', 'customerpart_no' )
             ->get();
 
         return $manifests;
@@ -229,19 +269,22 @@ abstract class BaseCustomer extends Model
         $manifestNumber = $data->pluck('dn_no')->unique()->values();
         $jobNumber = $data->pluck('job_no')->unique()->values();
 
-        $checkLeader = DB::table('tbl_kbndelivery')
+        $checkLeader = TblKbndelivery::query()
             ->whereIn('kbndn_no', $manifestNumber)
             ->whereIn('job_no', $jobNumber)
-            ->select('kbndn_no', 'job_no', 'check_leader')
+            ->select('kbndn_no', 'job_no', 'check_leader', 'checked_by')
+            ->with('checker')
             ->get()
             ->groupBy('kbndn_no')
             ->map(function ($logs) {
-                return $logs->first()->check_leader;
+                return $logs->first();
             });
 
         // gabungkan data
         $datas = $data->map(function ($manifest) use ($checkLeader) {
-            $manifest->check_leader = $checkLeader[$manifest->dn_no] ?? null;
+            $status = $checkLeader[$manifest->dn_no] ?? null;
+            $manifest->check_leader = $status ? $status->check_leader : null;
+            $manifest->checked_by = $status ? $status->checked_by: null;
             return $manifest;
         });
 
@@ -252,15 +295,17 @@ abstract class BaseCustomer extends Model
         $manifestNumbers = $filteredData->pluck('dn_no')->unique()->filter()->values();
         $statuses = DB::table('tbl_check_sj')
             ->whereIn('dn_no', $manifestNumbers)
-            ->select('dn_no', 'check_sj')
+            ->select('dn_no', 'check_sj', 'check_loading')
             ->get()
             ->groupBy('dn_no')
             ->map(function ($logs) {
-                return $logs->first()->check_sj;
+                return $logs->first();
             });
 
         return $filteredData->map(function ($manifest) use ($statuses) {
-            $manifest->check_sj = $statuses[$manifest->dn_no] ?? null;
+            $status = $statuses[$manifest->dn_no] ?? null;
+            $manifest->check_sj = $status ? $status->check_sj : null;
+            $manifest->check_loading = $status ? $status->check_loading : null;
             return $manifest;
         });
     }

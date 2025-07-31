@@ -1,10 +1,10 @@
-<h4 class="mb-4">Data Manifest</h4>
-            <div class="table-responsive-scroll">
-                <table class="table table-bordered table-striped mt-2 table-hover table-sm text-center">
+<div class="table-responsive-scroll">
+    <table class="table table-bordered table-striped mt-2 table-hover table-sm text-center">
                     <thead class="table-light">
                         <tr>
                             <th>No</th>
                             <th>Tanggal Order</th>
+                            <th>Customer</th>
                             <th>Manifest</th>
                             <th>Job No</th>
                             <th>Cycle</th>
@@ -20,22 +20,23 @@
                             $i = 1;
                         @endphp
 
-                    @if(empty($datas))
+                    @if(empty($data))
                         <tr>
                             <td colspan="6" class="text-center">Tidak ada data</td>
                         </tr>
                     @else
-                        @foreach ($datas as $data )
+                        @foreach ($data as $d )
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $data->tanggal_order }}</td>
-                            <td>{{ $data->dn_no }}</td>
-                            <td>{{ $data->job_no }}</td>
-                            <td>{{ $data->cycle }}</td> {{-- FIX: Added closing </td> here --}}
+                            <td>{{ $d->tanggal_order }}</td>
+                            <td>{{ $d->customer }}</td>
+                            <td>{{ $d->dn_no }}</td>
+                            <td>{{ $d->job_no }}</td>
+                            <td>{{ $d->cycle }}</td> {{-- FIX: Added closing </td> here --}}
                             <td>
-                                @if ($data->check_sj === null)
+                                @if ($d->check_sj === null)
                                     <b>Open</b>
-                                @elseif ($data->check_sj === 1)
+                                @elseif ($d->check_sj === 1)
                                     <b style="color: red;">Close</b>
                                 @else
                                     <b>Open</b> {{-- Tampilkan status apa adanya jika bukan null, OK, atau NG --}}
@@ -44,9 +45,9 @@
 
                             @if(request('loading') == 'true')
                                 <td>
-                                    @if ($data->check_loading === null)
+                                    @if ($d->check_loading === null)
                                         <b>Open</b>
-                                    @elseif ($data->check_loading === 1)
+                                    @elseif ($d->check_loading === 1)
                                         <b style="color: red;">Close</b>
                                     @else
                                         <b>Open</b> {{-- Tampilkan status apa adanya jika bukan null, OK, atau NG --}}
@@ -59,4 +60,4 @@
                     @endif
                     </tbody>
                 </table>
-            </div>
+</div>

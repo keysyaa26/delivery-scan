@@ -219,8 +219,10 @@
     .table-responsive-scroll {
         max-height: 300px; /* Atur tinggi maksimum yang Anda inginkan */
         overflow-y: auto;  /* Aktifkan scroll vertikal jika konten melebihi max-height */
-        border: 1px solid #dee2e6; /* Opsional: tambahkan border untuk visualisasi area scroll */
+        overflow-x: auto;  /* Aktifkan scroll horizontal jika konten melebihi max-height */
+        /* border: 1px solid #dee2e6; Opsional: tambahkan border untuk visualisasi area scroll */
         border-radius: .25rem; /* Opsional: sesuaikan dengan border-radius tabel Bootstrap */
+        width: 100%; /* Pastikan lebar responsif */
     }
 
     .table-responsive-scroll table thead th,

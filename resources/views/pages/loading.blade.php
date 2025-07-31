@@ -52,6 +52,7 @@
     document.getElementById('inputCycle').addEventListener('keydown', handleEnter);
     document.getElementById('inputRoute').addEventListener('keydown', handleEnter);
     document.getElementById('inputManifest').addEventListener('keydown', handleEnter);
+    let selectedDate = null;
 
     async function handleEnter(e) {
         if (e.key === 'Enter') {
@@ -70,7 +71,6 @@
         const cycle = document.getElementById('inputCycle').value;
         const route = document.getElementById('inputRoute').value;
         const csrfToken = document.querySelector('input[name="_token"]').value;
-        let selectedDate = null;
 
         try{
             const response = await fetch("{{ route ('wp.store-scan-2') }}", {
@@ -98,7 +98,7 @@
 
             if (data.success) {
                 document.getElementById('form2-container').style.display = 'block';
-                dataManifest(selectedDate); // Refresh the manifest table
+                dataManifest(selectedDate);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -114,8 +114,8 @@
         const manifest = document.getElementById('inputManifest').value;
         const csrfToken = document.querySelector('input[name="_token"]').value;
 
-        const response = await fetch("{{ route('po.scan-sj')}}", {
-            method: "POST",
+        const response = await fetch("{{ route('po.scan-loading') }}",  {
+            method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": csrfToken,
@@ -124,8 +124,10 @@
             body: JSON.stringify({
                 manifest: manifest
             })
-        });
+        })
+
         const data = await response.json();
+
         Swal.fire({
             title: data.success ? 'OK!' : 'NG!',
             text: data.message,
@@ -133,15 +135,17 @@
             timer: 2000,
             showConfirmButton: false
         });
+
         if (data.success) {
             dataManifest(selectedDate); // Refresh the manifest table
         }
+
     }
 
     async function dataManifest(date = null){
-        let route = "{{ route('wp.data-table-sj') }}";
+        let route = "{{ route('wp.data-table-sj') }}?loading=true";
         if (date) {
-            route = `{{ route('wp.data-table-sj') }}?date=${date}`;
+            route = `{{ route('wp.data-table-sj') }}?loading=true&date=${date}`;
         }
         const response = await fetch(route, {
             method: "GET",

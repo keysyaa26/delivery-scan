@@ -30,10 +30,21 @@ Route::middleware('auth')->group(function () {
             Route::get('scan-admin', 'scanAdmin')->name('scanAdmin');
             Route::get('scan-leader', 'scanLeader')->name('scanLeader');
             Route::get('check-surat-jalan', 'checkSuratJalan')->name('checkSuratJalan');
+            Route::get('loading', 'checkLoading')->name('checkLoading');
 
+            // cards data
             Route::get('get-admin-data', 'getAdminCheck')->name('dataAdmin');
             Route::get('get-prepare-data', 'getPrepareData')->name('dataPrepare');
             Route::get('get-checked-data', 'getCheckedData')->name('dataChecked');
+            Route::get('get-sj-data', 'getSJData')->name('dataSJ');
+
+            // view more
+            Route::get('view-more-admin', 'viewMoreAdmin')->name('viewMoreAdmin');
+            Route::get('view-more-prepare', 'viewMorePrepare')->name('viewMorePrepare');
+            Route::get('view-more-checked', 'viewMoreChecked')->name('viewMoreChecked');
+            Route::get('view-more-sj', 'viewMoreSJ')->name('viewMoreSJ');
+            Route::get('view-more-loading', 'viewMoreSJ')->name('viewMoreLoading');
+            Route::get('tes', 'tes')->name('tes'); // For testing purposes
     });
 
     Route::controller(ScanWaitingPostController::class)
@@ -55,9 +66,10 @@ Route::middleware('auth')->group(function () {
         ->prefix('manifest')
         ->group(function () {
             Route::post('store-scan', 'processScan')->name('store-scan');
-            
+
             // untuk surat jalan
             Route::post('scan-sj', 'checkManifestSJ')->name('scan-sj');
+            Route::post('scan-loading', 'checkLoading')->name('scan-loading');
     });
 
     Route::controller(CustomerLabelController::class)

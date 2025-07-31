@@ -11,7 +11,7 @@
 
     @if(session('error'))
     <script>
-        alert('{{ session('error') }}');
+        alert("{{ session('error') }}");
     </script>
     @endif
 
@@ -36,6 +36,18 @@
                 console.log(data);
                 const result = `${data.totalPlan} / ${data.totalActual}`;
                 document.getElementById('summaryChecked').innerHTML = result;
+            });
+        fetch ("{{ route('dataSJ')}}")
+            .then(response => response.json())
+            .then(data => {
+                const result = `${data.totalPlan} / ${data.totalActual}`;
+                document.getElementById('summarySJ').innerHTML = result;
+            });
+        fetch ("{{ route('dataSJ')}}")
+            .then(response => response.json())
+            .then(data => {
+                const result = `${data.totalPlan} / ${data.totalActual}`;
+                document.getElementById('summaryLoading').innerHTML = result;
             });
     }
 
