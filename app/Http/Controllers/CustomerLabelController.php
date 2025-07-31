@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Database\Factories\CustomerFactory;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Storage;
 
 class CustomerLabelController extends Controller
 {
@@ -63,22 +65,21 @@ class CustomerLabelController extends Controller
         }
     }
 
-    public function getLabelCust() {
-        $manifest = 'HPM 002024040100';
+    public function getLabelCust()
+    {
+        $dataList = [
+        ['customer' => 'HPM', 'route' => 'PLANT-2', 'cycle' => '1'],
+        ['customer' => 'HPM', 'route' => 'PLANT-2', 'cycle' => '2'],
+        ['customer' => 'HPM', 'route' => 'PLANT-2', 'cycle' => '3'],
+        ['customer' => 'HPM', 'route' => 'PLANT-2', 'cycle' => '4'],
+        ['customer' => 'HPM', 'route' => 'PLANT-2', 'cycle' => '5'],
+        ['customer' => 'HPM', 'route' => 'PLANT-2', 'cycle' => '6'],
+        ['customer' => 'HPM', 'route' => 'ALOZ', 'cycle' => '1'],
+        ['customer' => 'HPM', 'route' => 'ALOZ', 'cycle' => '2'],
+        ['customer' => 'HPM', 'route' => 'BLSI', 'cycle' => '1'],
+    ];
 
-        $dataLabel = DB::table('tbl_kbndelivery')
-            ->where('dn_no', $manifest)
-            ->select('job_no', 'seq_no', 'invid')
-            ->get();
-
-        $jobNos = $dataLabel->pluck('job_no')->unique();
-        $invIds = $dataLabel->pluck('invid')->unique();
-
-        $hpmData = DB::table('vw_data_hpm')
-            ->where('dn_no', $manifest)
-            ->whereIn('job_no', $jobNos)
-            ->whereIn('InvId', $invIds)
-            ->get();
+        return view('BarcodeMake', compact('dataList'));
     }
 
 }
