@@ -22,7 +22,6 @@ class ScanWaitingPostController extends BaseController
         }
 
         if (request()->ajax()) {
-            logger()->debug('Ajax request received');
             return view('partials.table-manifest', ['manifests' => $manifests, 'counter' => 1])->render();
         }
 
@@ -50,6 +49,7 @@ class ScanWaitingPostController extends BaseController
             ]);
 
             $manifests = $this->dataIndex($date);
+            Log::info($manifests);
 
             return response()
                 ->json([
@@ -57,7 +57,8 @@ class ScanWaitingPostController extends BaseController
                     'message' => 'Scan berhasil!',
                 ], 200);
         } catch (\Throwable $e) {
-            Log::error('QR Scan Error: '.$e->getMessage());
+            Log::error('error controller: '.$e->getMessage());
+            Log::info('scan masuk ng');
 
             return response()
                 ->json([
@@ -85,6 +86,7 @@ class ScanWaitingPostController extends BaseController
             ]);
 
             $manifests = $this->dataIndex($date);
+            Log::info($manifests);
 
             return response()
                 ->json([
@@ -94,7 +96,7 @@ class ScanWaitingPostController extends BaseController
                     'data' => $manifests,
                 ], 200);
         } catch (\Throwable $e) {
-            Log::error('QR Scan Error: '.$e->getMessage());
+            Log::error('error controller: '.$e->getMessage());
 
             return response()
                 ->json([

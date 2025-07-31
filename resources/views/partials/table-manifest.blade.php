@@ -20,7 +20,7 @@
                             $i = 1;
                         @endphp
 
-                    @if(empty($manifests))
+                    @if(!isset($manifests) || $manifests === null || count($manifests) === 0)
                         <tr>
                             <td colspan="6" class="text-center">Tidak ada data</td>
                         </tr>
